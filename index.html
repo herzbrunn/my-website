@@ -1,11 +1,372 @@
 <!DOCTYPE html>
-  <html lang="he">
-  <head>
-    <meta charset="UTF-8">
-    <title>האתר שלי</title>
-  </head>
-  <body>
-    <h1>שלום עולם!</h1>
-    <p>זהו האתר הראשון שלי ב-GitHub Pages.</p>
-  </body>
-  </html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>רישום לקוח חדש</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f2f5;
+    padding: 20px;
+    direction: rtl;
+  }
+  .form-wrapper {
+    max-width: 520px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+  .form-header {
+    background: #1a7a4a;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+  .form-body { padding: 18px 20px; }
+  .field {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 8px 0;
+    gap: 10px;
+  }
+  .field:last-of-type { border-bottom: none; }
+  label {
+    min-width: 170px;
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  label .req { color: #c00; margin-left: 2px; }
+  input[type="text"], input[type="email"], input[type="number"], select {
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid #bbb;
+    padding: 4px 6px;
+    font-size: 13px;
+    font-family: inherit;
+    direction: rtl;
+    background: transparent;
+    outline: none;
+  }
+  input:focus, select:focus { border-bottom-color: #1a7a4a; }
+  .date-group { display: flex; gap: 6px; flex: 1; }
+  .date-group select { flex: 1; }
+  .section-label {
+    background: #1a7a4a;
+    color: white;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 8px -20px;
+    padding-right: 20px;
+  }
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; }
+  .checkbox-row label { min-width: auto; font-weight: normal; }
+  .bottom-bar {
+    background: #e8f5ee;
+    padding: 10px 20px;
+    font-size: 12px;
+    color: #555;
+    border-top: 1px solid #cde;
+  }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    padding: 14px 20px;
+    background: #f8f8f8;
+    border-top: 1px solid #ddd;
+    justify-content: flex-start;
+  }
+  .btn-save {
+    background: #1a7a4a;
+    color: white;
+    border: none;
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-save:hover { background: #155e3a; }
+  .btn-close {
+    background: #e0e0e0;
+    color: #333;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-close:hover { background: #c8c8c8; }
+  #copy-msg {
+    display: none;
+    color: #1a7a4a;
+    font-weight: bold;
+    font-size: 13px;
+    margin-right: 10px;
+    align-self: center;
+  }
+</style>
+</head>
+<body>
+<div class="form-wrapper">
+  <div class="form-header">📋 רישום לקוח חדש</div>
+  <div class="form-body">
+
+    <div class="field">
+      <label><span class="req">*</span> שם פרטי</label>
+      <input type="text" id="f_shem_prati" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> שם משפחה</label>
+      <input type="text" id="f_shem_mishpacha" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> ניי"ד</label>
+      <input type="text" id="f_naid" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> אימות ניי"ד</label>
+      <input type="text" id="f_iymut_naid" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> צבירה בפנסיה</label>
+      <input type="number" id="f_tsevira" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> הפקדה לפנסיה</label>
+      <input type="number" id="f_hafkada" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> חברה מתחרה</label>
+      <select id="f_chevra">
+        <option value="">-- בחר --</option>
+        <option value="הראל" selected>הראל</option>
+        <option value="מגדל">מגדל</option>
+        <option value="כלל">כלל</option>
+        <option value="מנורה">מנורה</option>
+        <option value="פניקס">פניקס</option>
+        <option value="אחר">אחר</option>
+      </select>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> מספר שנים בחברה</label>
+      <input type="number" id="f_shanim" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> מין</label>
+      <select id="f_min">
+        <option value="">-- בחר --</option>
+        <option value="זכר">זכר</option>
+        <option value="נקבה">נקבה</option>
+      </select>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> שפת לקוח</label>
+      <select id="f_safa">
+        <option value="">-- בחר --</option>
+        <option value="עברית">עברית</option>
+        <option value="ערבית">ערבית</option>
+        <option value="רוסית">רוסית</option>
+        <option value="אנגלית">אנגלית</option>
+        <option value="אמהרית">אמהרית</option>
+      </select>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> אימייל</label>
+      <input type="email" id="f_email" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> אימות אימייל</label>
+      <input type="email" id="f_iymut_email" placeholder="">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> תאריך לידה</label>
+      <div class="date-group">
+        <select id="f_leda_yom"><option value="">יום</option>
+          <script>for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);</script>
+        </select>
+        <select id="f_leda_chodesh"><option value="">חודש</option>
+          <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
+        </select>
+        <select id="f_leda_shana"><option value="">שנה</option>
+          <script>for(let y=2010;y>=1940;y--) document.write(`<option>${y}</option>`);</script>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> מקום עבודה</label>
+      <input type="text" id="f_avoda" placeholder="">
+    </div>
+    <div class="field">
+      <label>תאריך יציאת כספים</label>
+      <div class="date-group">
+        <select id="f_yetsia_yom"><option value="">יום</option>
+          <script>for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);</script>
+        </select>
+        <select id="f_yetsia_chodesh"><option value="">חודש</option>
+          <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
+        </select>
+        <select id="f_yetsia_shana"><option value="">שנה</option>
+          <script>for(let y=2060;y>=2024;y--) document.write(`<option>${y}</option>`);</script>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>הנחת תשואה</label>
+      <input type="number" id="f_tnucha" value="8" step="0.1">
+    </div>
+    <div class="field">
+      <label>ד"נ מהפקדה (מתחרה)</label>
+      <input type="text" id="f_dn_hafkada_mit" value="1.50%">
+    </div>
+    <div class="field">
+      <label>ד"נ צבירה (מתחרה)</label>
+      <input type="text" id="f_dn_tsevira_mit" value="0.15%">
+    </div>
+    <div class="field">
+      <label>ד"נ מהפקדה (מנורה)</label>
+      <input type="text" id="f_dn_hafkada_men" value="0.90%">
+    </div>
+    <div class="field">
+      <label>ד"נ צבירה (מנורה)</label>
+      <input type="text" id="f_dn_tsevira_men" value="0.09%">
+    </div>
+    <div class="field">
+      <label>משפטי פתיחה</label>
+      <select id="f_mishpat">
+        <option value="">-- בחר --</option>
+        <option value="1">משפט 1</option>
+        <option value="2">משפט 2</option>
+      </select>
+    </div>
+
+    <div class="section-label">👤 איש קשר נוסף</div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="f_yoesh">
+      <label for="f_yoesh">יו איש הוצר ורחף</label>
+    </div>
+    <div class="field">
+      <label>קרבה</label>
+      <select id="f_karva">
+        <option value="">-- בחר --</option>
+        <option value="בן/בת זוג">בן/בת זוג</option>
+        <option value="ילד/ה">ילד/ה</option>
+        <option value="הורה">הורה</option>
+        <option value="אח/ות">אח/ות</option>
+        <option value="אחר">אחר</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="bottom-bar">🔵 משפט פתיחה לשיחה הבאה</div>
+
+  <div class="btn-row">
+    <button class="btn-save" onclick="saveAndCopy()">💾 שמור</button>
+    <button class="btn-close" onclick="clearForm()">✖ נקה</button>
+    <span id="copy-msg">✅ הועתק ללוח!</span>
+  </div>
+</div>
+
+<script>
+function saveAndCopy() {
+  const fields = [
+    { label: 'שם פרטי',            id: 'f_shem_prati' },
+    { label: 'שם משפחה',           id: 'f_shem_mishpacha' },
+    { label: 'ניי"ד',              id: 'f_naid' },
+    { label: 'אימות ניי"ד',        id: 'f_iymut_naid' },
+    { label: 'צבירה בפנסיה',       id: 'f_tsevira' },
+    { label: 'הפקדה לפנסיה',       id: 'f_hafkada' },
+    { label: 'חברה מתחרה',         id: 'f_chevra' },
+    { label: 'שנים בחברה',         id: 'f_shanim' },
+    { label: 'מין',                id: 'f_min' },
+    { label: 'שפת לקוח',           id: 'f_safa' },
+    { label: 'אימייל',             id: 'f_email' },
+    { label: 'אימות אימייל',        id: 'f_iymut_email' },
+    { label: 'תאריך לידה',         id: null, value: () => {
+        const y = document.getElementById('f_leda_shana').value;
+        const m = document.getElementById('f_leda_chodesh').value;
+        const d = document.getElementById('f_leda_yom').value;
+        return [d,m,y].filter(Boolean).join('/');
+    }},
+    { label: 'מקום עבודה',         id: 'f_avoda' },
+    { label: 'תאריך יציאת כספים',  id: null, value: () => {
+        const y = document.getElementById('f_yetsia_shana').value;
+        const m = document.getElementById('f_yetsia_chodesh').value;
+        const d = document.getElementById('f_yetsia_yom').value;
+        return [d,m,y].filter(Boolean).join('/');
+    }},
+    { label: 'הנחת תשואה',         id: 'f_tnucha' },
+    { label: 'ד"נ הפקדה מתחרה',   id: 'f_dn_hafkada_mit' },
+    { label: 'ד"נ צבירה מתחרה',   id: 'f_dn_tsevira_mit' },
+    { label: 'ד"נ הפקדה מנורה',   id: 'f_dn_hafkada_men' },
+    { label: 'ד"נ צבירה מנורה',   id: 'f_dn_tsevira_men' },
+    { label: 'משפטי פתיחה',        id: 'f_mishpat' },
+    { label: 'קרבה',               id: 'f_karva' },
+    { label: 'יו איש הוצר ורחף',  id: null, value: () =>
+        document.getElementById('f_yoesh').checked ? 'כן' : 'לא'
+    },
+  ];
+
+  // בנה מחרוזת: ערך,ערך,ערך...
+  const values = fields.map(f => {
+    if (f.value) return f.value();
+    const el = document.getElementById(f.id);
+    return el ? el.value.trim() : '';
+  });
+
+  const result = values.join(',');
+
+  // העתק ללוח
+  navigator.clipboard.writeText(result).then(() => {
+    const msg = document.getElementById('copy-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  }).catch(() => {
+    // fallback ישן יותר
+    const ta = document.createElement('textarea');
+    ta.value = result;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const msg = document.getElementById('copy-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  });
+}
+
+function clearForm() {
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]')
+    .forEach(el => el.value = '');
+  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  document.getElementById('f_yoesh').checked = false;
+  document.getElementById('f_tnucha').value = '8';
+  document.getElementById('f_dn_hafkada_mit').value = '1.50%';
+  document.getElementById('f_dn_tsevira_mit').value = '0.15%';
+  document.getElementById('f_dn_hafkada_men').value = '0.90%';
+  document.getElementById('f_dn_tsevira_men').value = '0.09%';
+}
+</script>
+</body>
+</html>
