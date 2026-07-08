@@ -125,6 +125,18 @@
     margin-right: 10px;
     align-self: center;
   }
+  .field-err input, .field-err select { border-bottom-color: #c00 !important; background: #fff0f0 !important; }
+  .checkbox-err { background: #fff0f0; border-radius: 4px; }
+  #err-msg {
+    display: none;
+    background: #fff0f0;
+    color: #c00;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 8px 20px;
+    border-top: 1px solid #fcc;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -365,6 +377,7 @@
 
   </div>
 
+  <div id="err-msg"></div>
   <div class="bottom-bar">🔵 משפט פתיחה לשיחה הבאה</div>
 
   <div class="btn-row">
@@ -400,7 +413,73 @@ function toggleFollowUp(on) {
   }
 }
 
+function showErr(msg) {
+  const el = document.getElementById('err-msg');
+  el.textContent = '⚠ ' + msg;
+  el.style.display = 'block';
+}
+function clearErr() {
+  document.getElementById('err-msg').style.display = 'none';
+  document.querySelectorAll('.field-err').forEach(el => el.classList.remove('field-err'));
+  document.querySelectorAll('.checkbox-err').forEach(el => el.classList.remove('checkbox-err'));
+}
+function markErr(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const row = el.closest('.field') || el.closest('.checkbox-row');
+  if (row) row.classList.add('field-err');
+}
+
+function validate() {
+  clearErr();
+  let ok = true;
+
+  const name = document.getElementById('f_shem_prati').value.trim();
+  if (!name) { markErr('f_shem_prati'); ok = false; }
+
+  const last = document.getElementById('f_shem_mishpacha').value.trim();
+  if (!last) { markErr('f_shem_mishpacha'); ok = false; }
+
+  const phone  = document.getElementById('f_naid').value.replace(/-/g,'').replace(/ /g,'');
+  const phone2 = document.getElementById('f_iymut_naid').value.replace(/-/g,'').replace(/ /g,'');
+  const phoneValid = phone.length === 10 && phone.startsWith('05') && /^\d+$/.test(phone);
+  if (!phoneValid) { markErr('f_naid'); ok = false; }
+  if (!phone2 || phone !== phone2) { markErr('f_iymut_naid'); ok = false; }
+
+  if (!document.getElementById('f_tsevira').value.trim()) { markErr('f_tsevira'); ok = false; }
+  if (!document.getElementById('f_hafkada').value.trim()) { markErr('f_hafkada'); ok = false; }
+  if (!document.getElementById('f_chevra').value)         { markErr('f_chevra');  ok = false; }
+  if (!document.getElementById('f_shanim').value.trim())  { markErr('f_shanim');  ok = false; }
+  if (!document.getElementById('f_min').value)            { markErr('f_min');     ok = false; }
+  if (!document.getElementById('f_safa').value)           { markErr('f_safa');    ok = false; }
+  if (!document.getElementById('f_mishpat').value)        { markErr('f_mishpat'); ok = false; }
+
+  const email  = document.getElementById('f_email').value.trim();
+  const email2 = document.getElementById('f_iymut_email').value.trim();
+  const emailValid = email.indexOf('@') > 0 && email.lastIndexOf('.') > email.indexOf('@') + 1;
+  if (!emailValid) { markErr('f_email'); ok = false; }
+  if (!email2 || email.toLowerCase() !== email2.toLowerCase()) { markErr('f_iymut_email'); ok = false; }
+
+  const dobD = document.getElementById('f_leda_yom').value;
+  const dobM = document.getElementById('f_leda_chodesh').value;
+  const dobY = document.getElementById('f_leda_shana').value;
+  if (!dobD) markErr('f_leda_yom');
+  if (!dobM) markErr('f_leda_chodesh');
+  if (!dobY) markErr('f_leda_shana');
+  if (!dobD || !dobM || !dobY) ok = false;
+
+  if (!document.getElementById('f_avoda').value.trim()) { markErr('f_avoda'); ok = false; }
+
+  if (!ok) {
+    if (phoneValid && phone !== phone2) showErr('מספרי הניי"ד אינם תואמים');
+    else if (emailValid && email.toLowerCase() !== email2.toLowerCase()) showErr('כתובות האימייל אינן תואמות');
+    else showErr('יש למלא את כל השדות המסומנים באדום');
+  }
+  return ok;
+}
+
 function saveAndCopy() {
+  if (!validate()) return;
   const fields = [
     { label: 'שם פרטי',            id: 'f_shem_prati' },
     { label: 'שם משפחה',           id: 'f_shem_mishpacha' },
@@ -483,6 +562,7 @@ function saveAndCopy() {
 }
 
 function clearForm() {
+  clearErr();
   document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]')
     .forEach(el => el.value = '');
   document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
