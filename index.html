@@ -525,7 +525,7 @@ function saveAndCopy() {
     { label: 'ד"נ צבירה מנורה',   id: 'f_dn_tsevira_men' },
     { label: 'סוג לקוח',           id: 'f_mishpat' },
     { label: 'יש איש קשר נוסף',   id: null, value: () =>
-        document.getElementById('f_yesh_ish_kesher').checked ? 'כן' : 'לא'
+        document.getElementById('f_yesh_ish_kesher').checked ? 'כן' : ''
     },
     { label: 'קרבה',               id: 'f_karva' },
     { label: 'שם איש קשר',        id: 'f_contact_name' },
@@ -542,10 +542,10 @@ function saveAndCopy() {
         return (h && min) ? h + ':' + min : '';
     }},
     { label: 'סיבת תזכורת',       id: 'f_fu_reason' },
-    { label: 'טופס 1',             id: 'f_tofes1' },
-    { label: 'טופס 2',             id: 'f_tofes2' },
-    { label: 'טופס 3',             id: 'f_tofes3' },
-    { label: 'טופס 4',             id: 'f_tofes4' },
+    { label: 'טופס', id: null, value: () => 'טופס ' + document.getElementById('f_tofes1').value.trim() },
+    { label: 'טופס', id: null, value: () => 'טופס ' + document.getElementById('f_tofes2').value.trim() },
+    { label: 'טופס', id: null, value: () => 'טופס ' + document.getElementById('f_tofes3').value.trim() },
+    { label: 'טופס', id: null, value: () => 'טופס ' + document.getElementById('f_tofes4').value.trim() },
   ];
 
   const values = fields.map(f => {
