@@ -335,7 +335,7 @@ function saveAndCopy() {
     return el ? el.value.trim() : '';
   });
 
-  const result = values.join(',');
+  const result = values.join('\n');
 
   // העתק ללוח
   navigator.clipboard.writeText(result).then(() => {
