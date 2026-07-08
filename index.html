@@ -162,11 +162,11 @@
     </div>
     <div class="field">
       <label><span class="req">*</span> צבירה בפנסיה</label>
-      <input type="number" id="f_tsevira">
+      <input type="text" id="f_tsevira" oninput="formatMoney(this)" inputmode="numeric">
     </div>
     <div class="field">
       <label><span class="req">*</span> הפקדה לפנסיה</label>
-      <input type="number" id="f_hafkada">
+      <input type="text" id="f_hafkada" oninput="formatMoney(this)" inputmode="numeric">
     </div>
     <div class="field">
       <label><span class="req">*</span> חברה מתחרה</label>
@@ -413,6 +413,18 @@ function toggleFollowUp(on) {
   }
 }
 
+function formatMoney(el) {
+  const raw = el.value.replace(/,/g, '');
+  if (!/^\d*$/.test(raw)) { el.value = el.value.slice(0, -1); return; }
+  if (!raw) return;
+  const sel = el.selectionStart;
+  const oldLen = el.value.length;
+  const formatted = Number(raw).toLocaleString('en-US');
+  el.value = formatted;
+  const diff = formatted.length - oldLen;
+  el.setSelectionRange(sel + diff, sel + diff);
+}
+
 function showErr(msg) {
   const el = document.getElementById('err-msg');
   el.textContent = '⚠ ' + msg;
@@ -446,8 +458,8 @@ function validate() {
   if (!phoneValid) { markErr('f_naid'); ok = false; }
   if (!phone2 || phone !== phone2) { markErr('f_iymut_naid'); ok = false; }
 
-  if (!document.getElementById('f_tsevira').value.trim()) { markErr('f_tsevira'); ok = false; }
-  if (!document.getElementById('f_hafkada').value.trim()) { markErr('f_hafkada'); ok = false; }
+  if (!document.getElementById('f_tsevira').value.replace(/,/g,'').trim()) { markErr('f_tsevira'); ok = false; }
+  if (!document.getElementById('f_hafkada').value.replace(/,/g,'').trim()) { markErr('f_hafkada'); ok = false; }
   if (!document.getElementById('f_chevra').value)         { markErr('f_chevra');  ok = false; }
   if (!document.getElementById('f_shanim').value.trim())  { markErr('f_shanim');  ok = false; }
   if (!document.getElementById('f_min').value)            { markErr('f_min');     ok = false; }
@@ -485,8 +497,8 @@ function saveAndCopy() {
     { label: 'שם משפחה',           id: 'f_shem_mishpacha' },
     { label: 'ניי"ד',              id: 'f_naid' },
     { label: 'אימות ניי"ד',        id: 'f_iymut_naid' },
-    { label: 'צבירה בפנסיה',       id: 'f_tsevira' },
-    { label: 'הפקדה לפנסיה',       id: 'f_hafkada' },
+    { label: 'צבירה בפנסיה',       id: null, value: () => document.getElementById('f_tsevira').value.replace(/,/g,'') },
+    { label: 'הפקדה לפנסיה',       id: null, value: () => document.getElementById('f_hafkada').value.replace(/,/g,'') },
     { label: 'חברה מתחרה',         id: 'f_chevra' },
     { label: 'שנים בחברה',         id: 'f_shanim' },
     { label: 'מין',                id: 'f_min' },
