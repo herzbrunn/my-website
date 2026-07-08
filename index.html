@@ -78,6 +78,7 @@
   }
   .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; }
   .checkbox-row label { min-width: auto; font-weight: normal; }
+  .field.disabled { opacity: 0.4; pointer-events: none; }
   .bottom-bar {
     background: #e8f5ee;
     padding: 10px 20px;
@@ -133,43 +134,43 @@
 
     <div class="field">
       <label><span class="req">*</span> שם פרטי</label>
-      <input type="text" id="f_shem_prati" placeholder="">
+      <input type="text" id="f_shem_prati">
     </div>
     <div class="field">
       <label><span class="req">*</span> שם משפחה</label>
-      <input type="text" id="f_shem_mishpacha" placeholder="">
+      <input type="text" id="f_shem_mishpacha">
     </div>
     <div class="field">
       <label><span class="req">*</span> ניי"ד</label>
-      <input type="text" id="f_naid" placeholder="">
+      <input type="text" id="f_naid">
     </div>
     <div class="field">
       <label><span class="req">*</span> אימות ניי"ד</label>
-      <input type="text" id="f_iymut_naid" placeholder="">
+      <input type="text" id="f_iymut_naid">
     </div>
     <div class="field">
       <label><span class="req">*</span> צבירה בפנסיה</label>
-      <input type="number" id="f_tsevira" placeholder="">
+      <input type="number" id="f_tsevira">
     </div>
     <div class="field">
       <label><span class="req">*</span> הפקדה לפנסיה</label>
-      <input type="number" id="f_hafkada" placeholder="">
+      <input type="number" id="f_hafkada">
     </div>
     <div class="field">
       <label><span class="req">*</span> חברה מתחרה</label>
       <select id="f_chevra">
         <option value="">-- בחר --</option>
-        <option value="הראל" selected>הראל</option>
-        <option value="מגדל">מגדל</option>
+        <option value="הראל">הראל</option>
         <option value="כלל">כלל</option>
-        <option value="מנורה">מנורה</option>
-        <option value="פניקס">פניקס</option>
-        <option value="אחר">אחר</option>
+        <option value="מגדל">מגדל</option>
+        <option value="מור">מור</option>
+        <option value="הפניקס">הפניקס</option>
+        <option value="מיטב">מיטב</option>
       </select>
     </div>
     <div class="field">
       <label><span class="req">*</span> מספר שנים בחברה</label>
-      <input type="number" id="f_shanim" placeholder="">
+      <input type="number" id="f_shanim">
     </div>
     <div class="field">
       <label><span class="req">*</span> מין</label>
@@ -187,16 +188,22 @@
         <option value="ערבית">ערבית</option>
         <option value="רוסית">רוסית</option>
         <option value="אנגלית">אנגלית</option>
+        <option value="צרפתית">צרפתית</option>
         <option value="אמהרית">אמהרית</option>
+        <option value="ספרדית">ספרדית</option>
+        <option value="גרמנית">גרמנית</option>
+        <option value="אוקראינית">אוקראינית</option>
+        <option value="רומנית">רומנית</option>
+        <option value="תיגרינית">תיגרינית</option>
       </select>
     </div>
     <div class="field">
       <label><span class="req">*</span> אימייל</label>
-      <input type="email" id="f_email" placeholder="">
+      <input type="email" id="f_email">
     </div>
     <div class="field">
       <label><span class="req">*</span> אימות אימייל</label>
-      <input type="email" id="f_iymut_email" placeholder="">
+      <input type="email" id="f_iymut_email">
     </div>
     <div class="field" style="flex-direction: column; align-items: flex-start; gap: 4px;">
       <label><span class="req">*</span> תאריך לידה</label>
@@ -208,13 +215,13 @@
           <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
         </select>
         <select id="f_leda_shana"><option value="">שנה</option>
-          <script>for(let y=2010;y>=1940;y--) document.write(`<option>${y}</option>`);</script>
+          <script>for(let y=2010;y>=1930;y--) document.write(`<option>${y}</option>`);</script>
         </select>
       </div>
     </div>
     <div class="field">
       <label><span class="req">*</span> מקום עבודה</label>
-      <input type="text" id="f_avoda" placeholder="">
+      <input type="text" id="f_avoda">
     </div>
     <div class="field" style="flex-direction: column; align-items: flex-start; gap: 4px;">
       <label>תאריך יציאת כספים</label>
@@ -251,47 +258,109 @@
       <input type="text" id="f_dn_tsevira_men" value="0.09%">
     </div>
     <div class="field">
-      <label>משפטי פתיחה</label>
+      <label>סוג לקוח</label>
       <select id="f_mishpat">
         <option value="">-- בחר --</option>
-        <option value="1">משפט 1</option>
-        <option value="2">משפט 2</option>
+        <option value="זרם בשיחה">🟢 זרם בשיחה</option>
+        <option value="על הגדר">🟡 על הגדר</option>
+        <option value="מתנגד">🔴 מתנגד</option>
+        <option value="ממהר">⚡ ממהר</option>
+        <option value="פסיבי">😐 פסיבי</option>
       </select>
     </div>
 
     <div class="section-label">👤 איש קשר נוסף</div>
 
     <div class="checkbox-row">
-      <label for="f_yoesh">יו איש הוצר ורחף</label>
-      <input type="checkbox" id="f_yoesh">
+      <label for="f_yesh_ish_kesher">יש איש קשר נוסף</label>
+      <input type="checkbox" id="f_yesh_ish_kesher" onchange="toggleContact(this.checked)">
     </div>
-    <div class="field">
+    <div class="field disabled" id="row_karva">
       <label>קרבה</label>
       <select id="f_karva">
         <option value="">-- בחר --</option>
-        <option value="בן/בת זוג">בן/בת זוג</option>
+        <option value="בעל">בעל</option>
+        <option value="אישה">אישה</option>
+        <option value="אח">אח</option>
+        <option value="אחות">אחות</option>
         <option value="ילד/ה">ילד/ה</option>
         <option value="הורה">הורה</option>
-        <option value="אח/ות">אח/ות</option>
+        <option value="אחר">אחר</option>
+      </select>
+    </div>
+    <div class="field disabled" id="row_contact_name">
+      <label>שם איש קשר</label>
+      <input type="text" id="f_contact_name">
+    </div>
+    <div class="field disabled" id="row_contact_phone">
+      <label>טלפון איש קשר</label>
+      <input type="text" id="f_contact_phone">
+    </div>
+
+    <div class="section-label">🔔 תזכורת</div>
+
+    <div class="checkbox-row">
+      <label for="f_tzkrt">קביעת תזכורת</label>
+      <input type="checkbox" id="f_tzkrt" onchange="toggleFollowUp(this.checked)">
+    </div>
+    <div class="field disabled" id="row_fu_date" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <label>תאריך תזכורת</label>
+      <div class="date-group" style="width: 100%;">
+        <select id="f_fu_yom"><option value="">יום</option>
+          <script>for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);</script>
+        </select>
+        <select id="f_fu_chodesh"><option value="">חודש</option>
+          <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
+        </select>
+        <select id="f_fu_shana"><option value="">שנה</option>
+          <script>for(let y=new Date().getFullYear();y<=new Date().getFullYear()+5;y++) document.write(`<option>${y}</option>`);</script>
+        </select>
+      </div>
+    </div>
+    <div class="field disabled" id="row_fu_time" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <label>שעת תזכורת</label>
+      <div class="date-group" style="width: 100%;">
+        <select id="f_fu_shaa">
+          <option value="">שעה</option>
+          <script>for(let h=7;h<=21;h++) document.write(`<option value="${String(h).padStart(2,'0')}">${String(h).padStart(2,'0')}</option>`);</script>
+        </select>
+        <select id="f_fu_dakot">
+          <option value="">דקות</option>
+          <option value="00">00</option>
+          <option value="15">15</option>
+          <option value="30">30</option>
+          <option value="45">45</option>
+        </select>
+      </div>
+    </div>
+    <div class="field disabled" id="row_fu_reason">
+      <label>סיבת תזכורת</label>
+      <select id="f_fu_reason">
+        <option value="">-- בחר --</option>
+        <option value="מעקב לאחר שיחה">מעקב לאחר שיחה</option>
+        <option value="חידוש עניין">חידוש עניין</option>
+        <option value="הצעת מחיר">הצעת מחיר</option>
+        <option value="תזכורת סגירה">תזכורת סגירה</option>
+        <option value="פגישה">פגישה</option>
         <option value="אחר">אחר</option>
       </select>
     </div>
 
     <div class="field">
       <label>טופס</label>
-      <input type="text" id="f_tofes1" placeholder="">
+      <input type="text" id="f_tofes1">
     </div>
     <div class="field">
       <label>טופס</label>
-      <input type="text" id="f_tofes2" placeholder="">
+      <input type="text" id="f_tofes2">
     </div>
     <div class="field">
       <label>טופס</label>
-      <input type="text" id="f_tofes3" placeholder="">
+      <input type="text" id="f_tofes3">
     </div>
     <div class="field">
       <label>טופס</label>
-      <input type="text" id="f_tofes4" placeholder="">
+      <input type="text" id="f_tofes4">
     </div>
 
   </div>
@@ -306,6 +375,31 @@
 </div>
 
 <script>
+function toggleContact(on) {
+  ['row_karva','row_contact_name','row_contact_phone'].forEach(id => {
+    document.getElementById(id).classList.toggle('disabled', !on);
+  });
+  if (!on) {
+    document.getElementById('f_karva').selectedIndex = 0;
+    document.getElementById('f_contact_name').value = '';
+    document.getElementById('f_contact_phone').value = '';
+  }
+}
+
+function toggleFollowUp(on) {
+  ['row_fu_date','row_fu_time','row_fu_reason'].forEach(id => {
+    document.getElementById(id).classList.toggle('disabled', !on);
+  });
+  if (!on) {
+    ['f_fu_yom','f_fu_chodesh','f_fu_shana','f_fu_shaa','f_fu_dakot','f_fu_reason']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el.tagName === 'SELECT') el.selectedIndex = 0;
+        else el.value = '';
+      });
+  }
+}
+
 function saveAndCopy() {
   const fields = [
     { label: 'שם פרטי',            id: 'f_shem_prati' },
@@ -319,7 +413,7 @@ function saveAndCopy() {
     { label: 'מין',                id: 'f_min' },
     { label: 'שפת לקוח',           id: 'f_safa' },
     { label: 'אימייל',             id: 'f_email' },
-    { label: 'אימות אימייל',        id: 'f_iymut_email' },
+    { label: 'אימות אימייל',       id: 'f_iymut_email' },
     { label: 'תאריך לידה',         id: null, value: () => {
         const y = document.getElementById('f_leda_shana').value;
         const m = document.getElementById('f_leda_chodesh').value;
@@ -338,18 +432,31 @@ function saveAndCopy() {
     { label: 'ד"נ צבירה מתחרה',   id: 'f_dn_tsevira_mit' },
     { label: 'ד"נ הפקדה מנורה',   id: 'f_dn_hafkada_men' },
     { label: 'ד"נ צבירה מנורה',   id: 'f_dn_tsevira_men' },
-    { label: 'משפטי פתיחה',        id: 'f_mishpat' },
-    { label: 'קרבה',               id: 'f_karva' },
-    { label: 'יו איש הוצר ורחף',  id: null, value: () =>
-        document.getElementById('f_yoesh').checked ? 'כן' : 'לא'
+    { label: 'סוג לקוח',           id: 'f_mishpat' },
+    { label: 'יש איש קשר נוסף',   id: null, value: () =>
+        document.getElementById('f_yesh_ish_kesher').checked ? 'כן' : 'לא'
     },
+    { label: 'קרבה',               id: 'f_karva' },
+    { label: 'שם איש קשר',        id: 'f_contact_name' },
+    { label: 'טלפון איש קשר',     id: 'f_contact_phone' },
+    { label: 'תאריך תזכורת',      id: null, value: () => {
+        const y = document.getElementById('f_fu_shana').value;
+        const m = document.getElementById('f_fu_chodesh').value;
+        const d = document.getElementById('f_fu_yom').value;
+        return [d,m,y].filter(Boolean).join('/');
+    }},
+    { label: 'שעת תזכורת',        id: null, value: () => {
+        const h = document.getElementById('f_fu_shaa').value;
+        const min = document.getElementById('f_fu_dakot').value;
+        return (h && min) ? h + ':' + min : '';
+    }},
+    { label: 'סיבת תזכורת',       id: 'f_fu_reason' },
     { label: 'טופס 1',             id: 'f_tofes1' },
     { label: 'טופס 2',             id: 'f_tofes2' },
     { label: 'טופס 3',             id: 'f_tofes3' },
     { label: 'טופס 4',             id: 'f_tofes4' },
   ];
 
-  // בנה מחרוזת: ערך,ערך,ערך...
   const values = fields.map(f => {
     if (f.value) return f.value();
     const el = document.getElementById(f.id);
@@ -358,13 +465,11 @@ function saveAndCopy() {
 
   const result = values.join('\n');
 
-  // העתק ללוח
   navigator.clipboard.writeText(result).then(() => {
     const msg = document.getElementById('copy-msg');
     msg.style.display = 'inline';
     setTimeout(() => msg.style.display = 'none', 3000);
   }).catch(() => {
-    // fallback ישן יותר
     const ta = document.createElement('textarea');
     ta.value = result;
     document.body.appendChild(ta);
@@ -381,11 +486,10 @@ function clearForm() {
   document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]')
     .forEach(el => el.value = '');
   document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
-  document.getElementById('f_yoesh').checked = false;
-  document.getElementById('f_tofes1').value = '';
-  document.getElementById('f_tofes2').value = '';
-  document.getElementById('f_tofes3').value = '';
-  document.getElementById('f_tofes4').value = '';
+  document.getElementById('f_yesh_ish_kesher').checked = false;
+  document.getElementById('f_tzkrt').checked = false;
+  toggleContact(false);
+  toggleFollowUp(false);
   document.getElementById('f_tnucha').value = '8';
   document.getElementById('f_dn_hafkada_mit').value = '1.50%';
   document.getElementById('f_dn_tsevira_mit').value = '0.15%';
