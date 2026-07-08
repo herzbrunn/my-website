@@ -184,6 +184,20 @@
       <label><span class="req">*</span> מספר שנים בחברה</label>
       <input type="number" id="f_shanim">
     </div>
+    <div class="field" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <label><span class="req">*</span> תאריך לידה</label>
+      <div class="date-group" style="width: 100%;">
+        <select id="f_leda_yom"><option value="">יום</option>
+          <script>for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);</script>
+        </select>
+        <select id="f_leda_chodesh"><option value="">חודש</option>
+          <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
+        </select>
+        <select id="f_leda_shana"><option value="">שנה</option>
+          <script>for(let y=2010;y>=1930;y--) document.write(`<option>${y}</option>`);</script>
+        </select>
+      </div>
+    </div>
     <div class="field">
       <label><span class="req">*</span> מין</label>
       <select id="f_min">
@@ -216,20 +230,6 @@
     <div class="field">
       <label><span class="req">*</span> אימות אימייל</label>
       <input type="email" id="f_iymut_email">
-    </div>
-    <div class="field" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-      <label><span class="req">*</span> תאריך לידה</label>
-      <div class="date-group" style="width: 100%;">
-        <select id="f_leda_yom"><option value="">יום</option>
-          <script>for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);</script>
-        </select>
-        <select id="f_leda_chodesh"><option value="">חודש</option>
-          <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
-        </select>
-        <select id="f_leda_shana"><option value="">שנה</option>
-          <script>for(let y=2010;y>=1930;y--) document.write(`<option>${y}</option>`);</script>
-        </select>
-      </div>
     </div>
     <div class="field">
       <label><span class="req">*</span> מקום עבודה</label>
@@ -501,16 +501,16 @@ function saveAndCopy() {
     { label: 'הפקדה לפנסיה',       id: null, value: () => document.getElementById('f_hafkada').value.replace(/,/g,'') },
     { label: 'חברה מתחרה',         id: 'f_chevra' },
     { label: 'שנים בחברה',         id: 'f_shanim' },
-    { label: 'מין',                id: 'f_min' },
-    { label: 'שפת לקוח',           id: 'f_safa' },
-    { label: 'אימייל',             id: 'f_email' },
-    { label: 'אימות אימייל',       id: 'f_iymut_email' },
     { label: 'תאריך לידה',         id: null, value: () => {
         const y = document.getElementById('f_leda_shana').value;
         const m = document.getElementById('f_leda_chodesh').value;
         const d = document.getElementById('f_leda_yom').value;
         return [d,m,y].filter(Boolean).join('/');
     }},
+    { label: 'מין',                id: 'f_min' },
+    { label: 'שפת לקוח',           id: 'f_safa' },
+    { label: 'אימייל',             id: 'f_email' },
+    { label: 'אימות אימייל',       id: 'f_iymut_email' },
     { label: 'מקום עבודה',         id: 'f_avoda' },
     { label: 'תאריך יציאת כספים',  id: null, value: () => {
         const y = document.getElementById('f_yetsia_shana').value;
