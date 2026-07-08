@@ -262,8 +262,8 @@
     <div class="section-label">👤 איש קשר נוסף</div>
 
     <div class="checkbox-row">
-      <input type="checkbox" id="f_yoesh">
       <label for="f_yoesh">יו איש הוצר ורחף</label>
+      <input type="checkbox" id="f_yoesh">
     </div>
     <div class="field">
       <label>קרבה</label>
@@ -275,6 +275,19 @@
         <option value="אח/ות">אח/ות</option>
         <option value="אחר">אחר</option>
       </select>
+    </div>
+
+    <div class="field">
+      <label>טופס</label>
+      <input type="text" id="f_tofes1" placeholder="">
+    </div>
+    <div class="field">
+      <label>טופס</label>
+      <input type="text" id="f_tofes2" placeholder="">
+    </div>
+    <div class="field">
+      <label>טופס</label>
+      <input type="text" id="f_tofes3" placeholder="">
     </div>
 
   </div>
@@ -326,6 +339,9 @@ function saveAndCopy() {
     { label: 'יו איש הוצר ורחף',  id: null, value: () =>
         document.getElementById('f_yoesh').checked ? 'כן' : 'לא'
     },
+    { label: 'טופס 1',             id: 'f_tofes1' },
+    { label: 'טופס 2',             id: 'f_tofes2' },
+    { label: 'טופס 3',             id: 'f_tofes3' },
   ];
 
   // בנה מחרוזת: ערך,ערך,ערך...
@@ -361,6 +377,9 @@ function clearForm() {
     .forEach(el => el.value = '');
   document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
   document.getElementById('f_yoesh').checked = false;
+  document.getElementById('f_tofes1').value = '';
+  document.getElementById('f_tofes2').value = '';
+  document.getElementById('f_tofes3').value = '';
   document.getElementById('f_tnucha').value = '8';
   document.getElementById('f_dn_hafkada_mit').value = '1.50%';
   document.getElementById('f_dn_tsevira_mit').value = '0.15%';
