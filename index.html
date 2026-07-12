@@ -554,7 +554,10 @@ function saveAndCopy() {
     return el ? el.value.trim() : '';
   });
 
-  const result = values.join('\n');
+  const regularValues = values.slice(0, values.length - 4);
+  const tofesValues   = values.slice(values.length - 4);
+  const longLine      = regularValues.filter(v => v && v.trim()).join(' ');
+  const result        = [...regularValues, longLine, ...tofesValues].join('\n');
 
   navigator.clipboard.writeText(result).then(() => {
     const msg = document.getElementById('copy-msg');
