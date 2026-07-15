@@ -317,23 +317,43 @@
     </div>
     <div class="field">
       <label>הנחת תשואה</label>
-      <input type="number" id="f_tnucha" value="8" step="0.1">
+      <div class="csel-wrapper csel-white" id="wrap_tnucha">
+        <input type="hidden" id="f_tnucha" value="8">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field">
       <label>ד"נ מהפקדה (מתחרה)</label>
-      <input type="text" id="f_dn_hafkada_mit" value="1.50%">
+      <div class="csel-wrapper csel-white" id="wrap_dn_hafkada_mit">
+        <input type="hidden" id="f_dn_hafkada_mit" value="1.50%">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field">
       <label>ד"נ צבירה (מתחרה)</label>
-      <input type="text" id="f_dn_tsevira_mit" value="0.15%">
+      <div class="csel-wrapper csel-white" id="wrap_dn_tsevira_mit">
+        <input type="hidden" id="f_dn_tsevira_mit" value="0.15%">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field">
       <label>ד"נ מהפקדה (מנורה)</label>
-      <input type="text" id="f_dn_hafkada_men" value="0.90%">
+      <div class="csel-wrapper csel-white" id="wrap_dn_hafkada_men">
+        <input type="hidden" id="f_dn_hafkada_men" value="0.90%">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field">
       <label>ד"נ צבירה (מנורה)</label>
-      <input type="text" id="f_dn_tsevira_men" value="0.09%">
+      <div class="csel-wrapper csel-white" id="wrap_dn_tsevira_men">
+        <input type="hidden" id="f_dn_tsevira_men" value="0.09%">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field">
       <label>סוג לקוח</label>
@@ -635,6 +655,22 @@ function saveAndCopy() {
   });
 }
 
+function setCsel(wrapperId, value) {
+  const w = document.getElementById(wrapperId);
+  if (!w) return;
+  const hidden  = w.querySelector('input[type=hidden]');
+  const trigger = w.querySelector('.csel-trigger');
+  w.querySelectorAll('.csel-option').forEach(o => {
+    o.classList.remove('active');
+    if (o.dataset.value === value) {
+      o.classList.add('active');
+      trigger.textContent = o.textContent;
+      trigger.classList.add('selected');
+      hidden.value = value;
+    }
+  });
+}
+
 function resetCsel(id) {
   const w = document.getElementById(id);
   if (!w) return;
@@ -706,6 +742,22 @@ document.addEventListener('click', () => {
   initCustomSelect('wrap_safa',   ['עברית','ערבית','רוסית','אנגלית','צרפתית','אמהרית','ספרדית','גרמנית','אוקראינית','רומנית','תיגרינית'].map(v=>({label:v,value:v})));
   initCustomSelect('wrap_karva',  ['בעל','אישה','אח','אחות','ילד/ה','הורה','אחר'].map(v=>({label:v,value:v})));
   initCustomSelect('wrap_fu_reason', ['מעקב לאחר שיחה','חידוש עניין','הצעת מחיר','תזכורת סגירה','פגישה','אחר'].map(v=>({label:v,value:v})));
+  // הנחת תשואה
+  initCustomSelect('wrap_tnucha', [4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,11,12].map(v=>({label:String(v),value:String(v)})));
+  setCsel('wrap_tnucha','8');
+  // ד"נ מהפקדה מתחרה
+  initCustomSelect('wrap_dn_hafkada_mit', ['0.50%','0.75%','1.00%','1.10%','1.20%','1.25%','1.30%','1.40%','1.50%','1.75%','2.00%','2.50%','3.00%'].map(v=>({label:v,value:v})));
+  setCsel('wrap_dn_hafkada_mit','1.50%');
+  // ד"נ צבירה מתחרה
+  initCustomSelect('wrap_dn_tsevira_mit', ['0.05%','0.09%','0.10%','0.12%','0.15%','0.18%','0.20%','0.22%','0.25%','0.30%'].map(v=>({label:v,value:v})));
+  setCsel('wrap_dn_tsevira_mit','0.15%');
+  // ד"נ מהפקדה מנורה
+  initCustomSelect('wrap_dn_hafkada_men', ['0.50%','0.60%','0.70%','0.80%','0.90%','1.00%','1.10%','1.20%'].map(v=>({label:v,value:v})));
+  setCsel('wrap_dn_hafkada_men','0.90%');
+  // ד"נ צבירה מנורה
+  initCustomSelect('wrap_dn_tsevira_men', ['0.05%','0.06%','0.07%','0.08%','0.09%','0.10%','0.12%','0.15%'].map(v=>({label:v,value:v})));
+  setCsel('wrap_dn_tsevira_men','0.09%');
+
   initCustomSelect('wrap_mishpat',   [
     {label:'🟢 זרם בשיחה',value:'זרם בשיחה'},
     {label:'🟡 על הגדר',  value:'על הגדר'},
@@ -728,11 +780,11 @@ function clearForm() {
   document.getElementById('f_tzkrt').checked = false;
   toggleContact(false);
   toggleFollowUp(false);
-  document.getElementById('f_tnucha').value = '8';
-  document.getElementById('f_dn_hafkada_mit').value = '1.50%';
-  document.getElementById('f_dn_tsevira_mit').value = '0.15%';
-  document.getElementById('f_dn_hafkada_men').value = '0.90%';
-  document.getElementById('f_dn_tsevira_men').value = '0.09%';
+  setCsel('wrap_tnucha','8');
+  setCsel('wrap_dn_hafkada_mit','1.50%');
+  setCsel('wrap_dn_tsevira_mit','0.15%');
+  setCsel('wrap_dn_hafkada_men','0.90%');
+  setCsel('wrap_dn_tsevira_men','0.09%');
 }
 </script>
 </body>
