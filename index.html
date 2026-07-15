@@ -542,10 +542,10 @@ function saveAndCopy() {
         return (h && min) ? h + ':' + min : '';
     }},
     { label: 'סיבת תזכורת',       id: 'f_fu_reason' },
-    { label: 'טופס', id: null, value: () => 'טופס ' + document.getElementById('f_tofes1').value.trim() },
-    { label: 'טופס', id: null, value: () => 'טופס ' + document.getElementById('f_tofes2').value.trim() },
-    { label: 'טופס', id: null, value: () => 'טופס ' + document.getElementById('f_tofes3').value.trim() },
-    { label: 'טופס', id: null, value: () => 'טופס ' + document.getElementById('f_tofes4').value.trim() },
+    { label: 'טופס', id: null, value: () => '##טופס ' + document.getElementById('f_tofes1').value.trim() },
+    { label: 'טופס', id: null, value: () => '##טופס ' + document.getElementById('f_tofes2').value.trim() },
+    { label: 'טופס', id: null, value: () => '##טופס ' + document.getElementById('f_tofes3').value.trim() },
+    { label: 'טופס', id: null, value: () => '##טופס ' + document.getElementById('f_tofes4').value.trim() },
   ];
 
   const values = fields.map(f => {
@@ -554,10 +554,7 @@ function saveAndCopy() {
     return el ? el.value.trim() : '';
   });
 
-  const regularValues = values.slice(0, values.length - 4);
-  const tofesValues   = values.slice(values.length - 4);
-  const longLine      = regularValues.filter(v => v && v.trim()).join(' ');
-  const result        = [...regularValues, longLine, ...tofesValues].join('\n');
+  const result = values.join('\n');
 
   navigator.clipboard.writeText(result).then(() => {
     const msg = document.getElementById('copy-msg');
