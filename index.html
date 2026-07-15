@@ -337,14 +337,11 @@
     </div>
     <div class="field">
       <label>סוג לקוח</label>
-      <select id="f_mishpat">
-        <option value="">-- בחר --</option>
-        <option value="זרם בשיחה">🟢 זרם בשיחה</option>
-        <option value="על הגדר">🟡 על הגדר</option>
-        <option value="מתנגד">🔴 מתנגד</option>
-        <option value="ממהר">⚡ ממהר</option>
-        <option value="פסיבי">😐 פסיבי</option>
-      </select>
+      <div class="csel-wrapper csel-white" id="wrap_mishpat">
+        <input type="hidden" id="f_mishpat" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
 
     <div class="section-label">👤 איש קשר נוסף</div>
@@ -708,6 +705,13 @@ document.addEventListener('click', () => {
   initCustomSelect('wrap_safa',   ['עברית','ערבית','רוסית','אנגלית','צרפתית','אמהרית','ספרדית','גרמנית','אוקראינית','רומנית','תיגרינית'].map(v=>({label:v,value:v})));
   initCustomSelect('wrap_karva',  ['בעל','אישה','אח','אחות','ילד/ה','הורה','אחר'].map(v=>({label:v,value:v})));
   initCustomSelect('wrap_fu_reason', ['מעקב לאחר שיחה','חידוש עניין','הצעת מחיר','תזכורת סגירה','פגישה','אחר'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_mishpat',   [
+    {label:'🟢 זרם בשיחה',value:'זרם בשיחה'},
+    {label:'🟡 על הגדר',  value:'על הגדר'},
+    {label:'🔴 מתנגד',    value:'מתנגד'},
+    {label:'⚡ ממהר',     value:'ממהר'},
+    {label:'😐 פסיבי',    value:'פסיבי'},
+  ]);
 })();
 
 function clearForm() {
@@ -718,7 +722,7 @@ function clearForm() {
   ['wrap_yetsia_yom','wrap_yetsia_chodesh','wrap_yetsia_shana',
    'wrap_leda_yom','wrap_leda_chodesh','wrap_leda_shana',
    'wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot','wrap_fu_reason',
-   'wrap_chevra','wrap_min','wrap_safa','wrap_karva'].forEach(resetCsel);
+   'wrap_chevra','wrap_min','wrap_safa','wrap_karva','wrap_mishpat'].forEach(resetCsel);
   document.getElementById('f_yesh_ish_kesher').checked = false;
   document.getElementById('f_tzkrt').checked = false;
   toggleContact(false);
