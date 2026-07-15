@@ -125,7 +125,28 @@
     margin-right: 10px;
     align-self: center;
   }
-  #f_yetsia_yom option, #f_yetsia_chodesh option, #f_yetsia_shana option { background: #fff9a0; }
+  .yetsia-row {
+    background: #ffd700;
+    margin: 0 -20px;
+    padding: 10px 20px;
+    border-right: 6px solid #e65c00;
+  }
+  .yetsia-row label {
+    font-size: 15px !important;
+    font-weight: bold !important;
+    color: #7a3300 !important;
+  }
+  .yetsia-row select {
+    background: #ffd700;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .yetsia-row select:focus {
+    background: #ffaa00;
+    border-bottom: 2px solid #e65c00 !important;
+    box-shadow: 0 0 0 3px rgba(230,92,0,0.35);
+    outline: none;
+  }
   .field-err input, .field-err select { border-bottom-color: #c00 !important; background: #fff0f0 !important; }
   .checkbox-err { background: #fff0f0; border-radius: 4px; }
   #err-msg {
@@ -236,16 +257,16 @@
       <label><span class="req">*</span> מקום עבודה</label>
       <input type="text" id="f_avoda">
     </div>
-    <div class="field" style="flex-direction: column; align-items: flex-start; gap: 4px; background: #fff9a0; margin: 0 -20px; padding: 8px 20px;">
-      <label>תאריך יציאת כספים</label>
+    <div class="field yetsia-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <label>⚡ תאריך יציאת כספים</label>
       <div class="date-group" style="width: 100%;">
-        <select id="f_yetsia_yom" style="background: #fff9a0;"><option value="">יום</option>
+        <select id="f_yetsia_yom"><option value="">יום</option>
           <script>for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);</script>
         </select>
-        <select id="f_yetsia_chodesh" style="background: #fff9a0;"><option value="">חודש</option>
+        <select id="f_yetsia_chodesh"><option value="">חודש</option>
           <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
         </select>
-        <select id="f_yetsia_shana" style="background: #fff9a0;"><option value="">שנה</option>
+        <select id="f_yetsia_shana"><option value="">שנה</option>
           <script>for(let y=2060;y>=2024;y--) document.write(`<option>${y}</option>`);</script>
         </select>
       </div>
