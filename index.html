@@ -635,8 +635,10 @@ function saveAndCopy() {
     return el ? el.value.trim() : '';
   });
 
-  const longLine = values.filter(v => v && v.trim() && !v.startsWith('##טופס')).join(' ');
-  const result = values.join('\n') + '\n' + longLine;
+  const regularValues = values.filter(v => !v.startsWith('##טופס'));
+  const tofesValues   = values.filter(v => v.startsWith('##טופס'));
+  const longLine = regularValues.filter(v => v && v.trim()).join(' ');
+  const result = regularValues.join('\n') + '\n\n\n\n' + longLine + '\n' + tofesValues.join('\n');
 
   navigator.clipboard.writeText(result).then(() => {
     const msg = document.getElementById('copy-msg');
