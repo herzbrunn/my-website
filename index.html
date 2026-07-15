@@ -397,31 +397,36 @@
     <div class="field disabled" id="row_fu_date" style="flex-direction: column; align-items: flex-start; gap: 4px;">
       <label>תאריך תזכורת</label>
       <div class="date-group" style="width: 100%;">
-        <select id="f_fu_yom"><option value="">יום</option>
-          <script>for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);</script>
-        </select>
-        <select id="f_fu_chodesh"><option value="">חודש</option>
-          <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
-        </select>
-        <select id="f_fu_shana"><option value="">שנה</option>
-          <script>for(let y=new Date().getFullYear();y<=new Date().getFullYear()+5;y++) document.write(`<option>${y}</option>`);</script>
-        </select>
+        <div class="csel-wrapper csel-white" id="wrap_fu_yom">
+          <input type="hidden" id="f_fu_yom" value="">
+          <div class="csel-trigger" data-ph="יום">יום</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper csel-white" id="wrap_fu_chodesh">
+          <input type="hidden" id="f_fu_chodesh" value="">
+          <div class="csel-trigger" data-ph="חודש">חודש</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper csel-white" id="wrap_fu_shana">
+          <input type="hidden" id="f_fu_shana" value="">
+          <div class="csel-trigger" data-ph="שנה">שנה</div>
+          <div class="csel-options"></div>
+        </div>
       </div>
     </div>
     <div class="field disabled" id="row_fu_time" style="flex-direction: column; align-items: flex-start; gap: 4px;">
       <label>שעת תזכורת</label>
       <div class="date-group" style="width: 100%;">
-        <select id="f_fu_shaa">
-          <option value="">שעה</option>
-          <script>for(let h=7;h<=21;h++) document.write(`<option value="${String(h).padStart(2,'0')}">${String(h).padStart(2,'0')}</option>`);</script>
-        </select>
-        <select id="f_fu_dakot">
-          <option value="">דקות</option>
-          <option value="00">00</option>
-          <option value="15">15</option>
-          <option value="30">30</option>
-          <option value="45">45</option>
-        </select>
+        <div class="csel-wrapper csel-white" id="wrap_fu_shaa">
+          <input type="hidden" id="f_fu_shaa" value="">
+          <div class="csel-trigger" data-ph="שעה">שעה</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper csel-white" id="wrap_fu_dakot">
+          <input type="hidden" id="f_fu_dakot" value="">
+          <div class="csel-trigger" data-ph="דקות">דקות</div>
+          <div class="csel-options"></div>
+        </div>
       </div>
     </div>
     <div class="field disabled" id="row_fu_reason">
@@ -483,12 +488,15 @@ function toggleFollowUp(on) {
     document.getElementById(id).classList.toggle('disabled', !on);
   });
   if (!on) {
-    ['f_fu_yom','f_fu_chodesh','f_fu_shana','f_fu_shaa','f_fu_dakot','f_fu_reason']
-      .forEach(id => {
-        const el = document.getElementById(id);
-        if (el.tagName === 'SELECT') el.selectedIndex = 0;
-        else el.value = '';
-      });
+    document.getElementById('f_fu_reason').selectedIndex = 0;
+    ['wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot'].forEach(id => {
+      const w = document.getElementById(id);
+      const tr = w.querySelector('.csel-trigger');
+      tr.textContent = tr.dataset.ph;
+      tr.classList.remove('selected');
+      w.querySelector('input[type=hidden]').value = '';
+      w.querySelectorAll('.csel-option').forEach(o => o.classList.remove('active'));
+    });
   }
 }
 
@@ -697,6 +705,17 @@ document.addEventListener('click', () => {
   const ledaYears = [];
   for(let y=2010;y>=1930;y--) ledaYears.push({label:String(y),value:String(y)});
   initCustomSelect('wrap_leda_shana', ledaYears);
+
+  // תזכורת — תאריך
+  initCustomSelect('wrap_fu_yom', Array.from({length:31},(_,i)=>({label:String(i+1),value:String(i+1)})));
+  initCustomSelect('wrap_fu_chodesh', monthNames.map((m,i)=>({label:m,value:String(i+1)})));
+  const fuYears = [];
+  for(let y=new Date().getFullYear();y<=new Date().getFullYear()+5;y++) fuYears.push({label:String(y),value:String(y)});
+  initCustomSelect('wrap_fu_shana', fuYears);
+  // תזכורת — שעה
+  const hours = Array.from({length:15},(_,i)=>{ const h=String(i+7).padStart(2,'0'); return {label:h,value:h}; });
+  initCustomSelect('wrap_fu_shaa', hours);
+  initCustomSelect('wrap_fu_dakot', [{label:'00',value:'00'},{label:'15',value:'15'},{label:'30',value:'30'},{label:'45',value:'45'}]);
 })();
 
 function clearForm() {
@@ -704,7 +723,9 @@ function clearForm() {
   document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]')
     .forEach(el => el.value = '');
   document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
-  ['wrap_yetsia_yom','wrap_yetsia_chodesh','wrap_yetsia_shana','wrap_leda_yom','wrap_leda_chodesh','wrap_leda_shana'].forEach(id => {
+  ['wrap_yetsia_yom','wrap_yetsia_chodesh','wrap_yetsia_shana',
+   'wrap_leda_yom','wrap_leda_chodesh','wrap_leda_shana',
+   'wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot'].forEach(id => {
     const w = document.getElementById(id);
     const tr = w.querySelector('.csel-trigger');
     tr.textContent = tr.dataset.ph;
