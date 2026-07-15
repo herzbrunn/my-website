@@ -237,15 +237,11 @@
     </div>
     <div class="field">
       <label><span class="req">*</span> חברה מתחרה</label>
-      <select id="f_chevra">
-        <option value="">-- בחר --</option>
-        <option value="הראל">הראל</option>
-        <option value="כלל">כלל</option>
-        <option value="מגדל">מגדל</option>
-        <option value="מור">מור</option>
-        <option value="הפניקס">הפניקס</option>
-        <option value="מיטב">מיטב</option>
-      </select>
+      <div class="csel-wrapper csel-white" id="wrap_chevra">
+        <input type="hidden" id="f_chevra" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field">
       <label><span class="req">*</span> מספר שנים בחברה</label>
@@ -273,28 +269,19 @@
     </div>
     <div class="field">
       <label><span class="req">*</span> מין</label>
-      <select id="f_min">
-        <option value="">-- בחר --</option>
-        <option value="זכר">זכר</option>
-        <option value="נקבה">נקבה</option>
-      </select>
+      <div class="csel-wrapper csel-white" id="wrap_min">
+        <input type="hidden" id="f_min" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field">
       <label><span class="req">*</span> שפת לקוח</label>
-      <select id="f_safa">
-        <option value="">-- בחר --</option>
-        <option value="עברית">עברית</option>
-        <option value="ערבית">ערבית</option>
-        <option value="רוסית">רוסית</option>
-        <option value="אנגלית">אנגלית</option>
-        <option value="צרפתית">צרפתית</option>
-        <option value="אמהרית">אמהרית</option>
-        <option value="ספרדית">ספרדית</option>
-        <option value="גרמנית">גרמנית</option>
-        <option value="אוקראינית">אוקראינית</option>
-        <option value="רומנית">רומנית</option>
-        <option value="תיגרינית">תיגרינית</option>
-      </select>
+      <div class="csel-wrapper csel-white" id="wrap_safa">
+        <input type="hidden" id="f_safa" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field">
       <label><span class="req">*</span> אימייל</label>
@@ -368,16 +355,11 @@
     </div>
     <div class="field disabled" id="row_karva">
       <label>קרבה</label>
-      <select id="f_karva">
-        <option value="">-- בחר --</option>
-        <option value="בעל">בעל</option>
-        <option value="אישה">אישה</option>
-        <option value="אח">אח</option>
-        <option value="אחות">אחות</option>
-        <option value="ילד/ה">ילד/ה</option>
-        <option value="הורה">הורה</option>
-        <option value="אחר">אחר</option>
-      </select>
+      <div class="csel-wrapper csel-white" id="wrap_karva">
+        <input type="hidden" id="f_karva" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
     <div class="field disabled" id="row_contact_name">
       <label>שם איש קשר</label>
@@ -431,15 +413,11 @@
     </div>
     <div class="field disabled" id="row_fu_reason">
       <label>סיבת תזכורת</label>
-      <select id="f_fu_reason">
-        <option value="">-- בחר --</option>
-        <option value="מעקב לאחר שיחה">מעקב לאחר שיחה</option>
-        <option value="חידוש עניין">חידוש עניין</option>
-        <option value="הצעת מחיר">הצעת מחיר</option>
-        <option value="תזכורת סגירה">תזכורת סגירה</option>
-        <option value="פגישה">פגישה</option>
-        <option value="אחר">אחר</option>
-      </select>
+      <div class="csel-wrapper csel-white" id="wrap_fu_reason">
+        <input type="hidden" id="f_fu_reason" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
     </div>
 
     <div class="field">
@@ -477,7 +455,7 @@ function toggleContact(on) {
     document.getElementById(id).classList.toggle('disabled', !on);
   });
   if (!on) {
-    document.getElementById('f_karva').selectedIndex = 0;
+    resetCsel('wrap_karva');
     document.getElementById('f_contact_name').value = '';
     document.getElementById('f_contact_phone').value = '';
   }
@@ -488,8 +466,7 @@ function toggleFollowUp(on) {
     document.getElementById(id).classList.toggle('disabled', !on);
   });
   if (!on) {
-    document.getElementById('f_fu_reason').selectedIndex = 0;
-    ['wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot'].forEach(id => {
+    ['wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot','wrap_fu_reason'].forEach(id => {
       const w = document.getElementById(id);
       const tr = w.querySelector('.csel-trigger');
       tr.textContent = tr.dataset.ph;
@@ -660,7 +637,17 @@ function saveAndCopy() {
   });
 }
 
-// ── Custom select for יציאת כספים ──────────────────────────
+function resetCsel(id) {
+  const w = document.getElementById(id);
+  if (!w) return;
+  const tr = w.querySelector('.csel-trigger');
+  tr.textContent = tr.dataset.ph;
+  tr.classList.remove('selected');
+  w.querySelector('input[type=hidden]').value = '';
+  w.querySelectorAll('.csel-option').forEach(o => o.classList.remove('active'));
+}
+
+// ── Custom select ──────────────────────────────────────────
 function initCustomSelect(wrapperId, items) {
   const wrapper = document.getElementById(wrapperId);
   const hidden  = wrapper.querySelector('input[type=hidden]');
@@ -716,6 +703,11 @@ document.addEventListener('click', () => {
   const hours = Array.from({length:15},(_,i)=>{ const h=String(i+7).padStart(2,'0'); return {label:h,value:h}; });
   initCustomSelect('wrap_fu_shaa', hours);
   initCustomSelect('wrap_fu_dakot', [{label:'00',value:'00'},{label:'15',value:'15'},{label:'30',value:'30'},{label:'45',value:'45'}]);
+  initCustomSelect('wrap_chevra', ['הראל','כלל','מגדל','מור','הפניקס','מיטב'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_min',    ['זכר','נקבה'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_safa',   ['עברית','ערבית','רוסית','אנגלית','צרפתית','אמהרית','ספרדית','גרמנית','אוקראינית','רומנית','תיגרינית'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_karva',  ['בעל','אישה','אח','אחות','ילד/ה','הורה','אחר'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_fu_reason', ['מעקב לאחר שיחה','חידוש עניין','הצעת מחיר','תזכורת סגירה','פגישה','אחר'].map(v=>({label:v,value:v})));
 })();
 
 function clearForm() {
@@ -725,14 +717,8 @@ function clearForm() {
   document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
   ['wrap_yetsia_yom','wrap_yetsia_chodesh','wrap_yetsia_shana',
    'wrap_leda_yom','wrap_leda_chodesh','wrap_leda_shana',
-   'wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot'].forEach(id => {
-    const w = document.getElementById(id);
-    const tr = w.querySelector('.csel-trigger');
-    tr.textContent = tr.dataset.ph;
-    tr.classList.remove('selected');
-    w.querySelector('input[type=hidden]').value = '';
-    w.querySelectorAll('.csel-option').forEach(o => o.classList.remove('active'));
-  });
+   'wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot','wrap_fu_reason',
+   'wrap_chevra','wrap_min','wrap_safa','wrap_karva'].forEach(resetCsel);
   document.getElementById('f_yesh_ish_kesher').checked = false;
   document.getElementById('f_tzkrt').checked = false;
   toggleContact(false);
