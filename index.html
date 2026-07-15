@@ -615,7 +615,8 @@ function saveAndCopy() {
     return el ? el.value.trim() : '';
   });
 
-  const result = values.join('\n');
+  const longLine = values.filter(v => v && v.trim() && !v.startsWith('##טופס')).join(' ');
+  const result = values.join('\n') + '\n' + longLine;
 
   navigator.clipboard.writeText(result).then(() => {
     const msg = document.getElementById('copy-msg');
