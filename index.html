@@ -136,17 +136,44 @@
     font-weight: bold !important;
     color: #7a3300 !important;
   }
-  .yetsia-row select {
-    background: #ffd700;
-    font-weight: bold;
+  .csel-wrapper { position: relative; flex: 1; }
+  .csel-trigger {
+    border-bottom: 2px solid #c8860a;
+    padding: 5px 8px;
     font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #ffd700;
+    color: #999;
+    user-select: none;
+    border-radius: 3px 3px 0 0;
   }
-  .yetsia-row select:focus {
-    background: #ffaa00;
-    border-bottom: 2px solid #e65c00 !important;
-    box-shadow: 0 0 0 3px rgba(230,92,0,0.35);
-    outline: none;
+  .csel-trigger.selected { color: #3a1a00; }
+  .csel-trigger:hover { background: #ffcc00; }
+  .csel-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background: #fff9c4;
+    border: 2px solid #e65c00;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 9999;
+    box-shadow: 0 6px 16px rgba(230,92,0,0.3);
   }
+  .csel-options.open { display: block; }
+  .csel-option {
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    direction: rtl;
+    color: #3a1a00;
+  }
+  .csel-option:hover { background: #ffd700; }
+  .csel-option.active { background: #e65c00; color: white; font-weight: bold; }
   .field-err input, .field-err select { border-bottom-color: #c00 !important; background: #fff0f0 !important; }
   .checkbox-err { background: #fff0f0; border-radius: 4px; }
   #err-msg {
@@ -260,15 +287,21 @@
     <div class="field yetsia-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
       <label>⚡ תאריך יציאת כספים</label>
       <div class="date-group" style="width: 100%;">
-        <select id="f_yetsia_yom"><option value="">יום</option>
-          <script>for(let i=1;i<=31;i++) document.write(`<option>${i}</option>`);</script>
-        </select>
-        <select id="f_yetsia_chodesh"><option value="">חודש</option>
-          <script>['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'].forEach((m,i)=>document.write(`<option value="${i+1}">${m}</option>`));</script>
-        </select>
-        <select id="f_yetsia_shana"><option value="">שנה</option>
-          <script>for(let y=2060;y>=2024;y--) document.write(`<option>${y}</option>`);</script>
-        </select>
+        <div class="csel-wrapper" id="wrap_yetsia_yom">
+          <input type="hidden" id="f_yetsia_yom" value="">
+          <div class="csel-trigger" data-ph="יום">יום</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper" id="wrap_yetsia_chodesh">
+          <input type="hidden" id="f_yetsia_chodesh" value="">
+          <div class="csel-trigger" data-ph="חודש">חודש</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper" id="wrap_yetsia_shana">
+          <input type="hidden" id="f_yetsia_shana" value="">
+          <div class="csel-trigger" data-ph="שנה">שנה</div>
+          <div class="csel-options"></div>
+        </div>
       </div>
     </div>
     <div class="field">
@@ -595,11 +628,59 @@ function saveAndCopy() {
   });
 }
 
+// ── Custom select for יציאת כספים ──────────────────────────
+function initCustomSelect(wrapperId, items) {
+  const wrapper = document.getElementById(wrapperId);
+  const hidden  = wrapper.querySelector('input[type=hidden]');
+  const trigger = wrapper.querySelector('.csel-trigger');
+  const opts    = wrapper.querySelector('.csel-options');
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'csel-option';
+    div.textContent = item.label;
+    div.dataset.value = item.value;
+    div.addEventListener('click', () => {
+      hidden.value = item.value;
+      trigger.textContent = item.label;
+      trigger.classList.add('selected');
+      opts.classList.remove('open');
+      opts.querySelectorAll('.csel-option').forEach(o => o.classList.remove('active'));
+      div.classList.add('active');
+    });
+    opts.appendChild(div);
+  });
+  trigger.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelectorAll('.csel-options.open').forEach(o => { if(o!==opts) o.classList.remove('open'); });
+    opts.classList.toggle('open');
+  });
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.csel-options.open').forEach(o => o.classList.remove('open'));
+});
+(function(){
+  const days = Array.from({length:31},(_,i)=>({label:String(i+1),value:String(i+1)}));
+  initCustomSelect('wrap_yetsia_yom', days);
+  const monthNames = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  initCustomSelect('wrap_yetsia_chodesh', monthNames.map((m,i)=>({label:m,value:String(i+1)})));
+  const years = [];
+  for(let y=2060;y>=2024;y--) years.push({label:String(y),value:String(y)});
+  initCustomSelect('wrap_yetsia_shana', years);
+})();
+
 function clearForm() {
   clearErr();
   document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]')
     .forEach(el => el.value = '');
   document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  ['wrap_yetsia_yom','wrap_yetsia_chodesh','wrap_yetsia_shana'].forEach(id => {
+    const w = document.getElementById(id);
+    const tr = w.querySelector('.csel-trigger');
+    tr.textContent = tr.dataset.ph;
+    tr.classList.remove('selected');
+    w.querySelector('input[type=hidden]').value = '';
+    w.querySelectorAll('.csel-option').forEach(o => o.classList.remove('active'));
+  });
   document.getElementById('f_yesh_ish_kesher').checked = false;
   document.getElementById('f_tzkrt').checked = false;
   toggleContact(false);
