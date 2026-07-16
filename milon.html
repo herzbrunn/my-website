@@ -4,8 +4,87 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>מילון</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .btn {
+      background: #25d366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #1ebe5a;
+    }
+    .btn:active {
+      background: #17a84e;
+    }
+    .desc {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .copied-msg {
+      font-size: 13px;
+      color: #25d366;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
+
+<h1>מילון מונחים</h1>
+
+<div class="card">
+  <button class="btn" onclick="copyWord('רישום', this)">רישום</button>
+  <span class="desc">שליחת המילה "רישום" — מתאים כשהלקוח מתעניין בהצטרפות או פתיחת חשבון</span>
+  <span class="copied-msg">הועתק!</span>
+</div>
+
+<div class="card">
+  <button class="btn" onclick="copyWord('מילון', this)">מילון</button>
+  <span class="desc">שליחת המילה "מילון" — מתאים כשהלקוח מבקש רשימת מונחים או הסברים</span>
+  <span class="copied-msg">הועתק!</span>
+</div>
+
+<script>
+  function copyWord(word, btn) {
+    navigator.clipboard.writeText(word).then(function() {
+      var msg = btn.parentElement.querySelector('.copied-msg');
+      msg.style.opacity = '1';
+      setTimeout(function() { msg.style.opacity = '0'; }, 1500);
+    });
+  }
+</script>
 
 </body>
 </html>
