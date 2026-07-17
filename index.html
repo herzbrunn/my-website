@@ -525,7 +525,7 @@ function markErr(id) {
 
 function validate() {
   clearErr();
-  let ok = true;
+  let ok = true; let ageErr = false;
 
   const name = document.getElementById('f_shem_prati').value.trim();
   if (!name) { markErr('f_shem_prati'); ok = false; }
@@ -561,10 +561,23 @@ function validate() {
   if (!dobY) markErr('f_leda_shana');
   if (!dobD || !dobM || !dobY) ok = false;
 
+  if (dobD && dobM && dobY) {
+    const birth = new Date(parseInt(dobY), parseInt(dobM) - 1, parseInt(dobD));
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const dm = today.getMonth() - birth.getMonth();
+    if (dm < 0 || (dm === 0 && today.getDate() < birth.getDate())) age--;
+    if (age < 18) {
+      markErr('f_leda_yom'); markErr('f_leda_chodesh'); markErr('f_leda_shana');
+      ageErr = true; ok = false;
+    }
+  }
+
   if (!document.getElementById('f_avoda').value.trim()) { markErr('f_avoda'); ok = false; }
 
   if (!ok) {
-    if (phoneValid && phone !== phone2) showErr('מספרי הניי"ד אינם תואמים');
+    if (ageErr) showErr('גיל מינימלי לרישום הוא 18 שנה — לקוח זה אינו עומד בתנאי');
+    else if (phoneValid && phone !== phone2) showErr('מספרי הניי"ד אינם תואמים');
     else if (emailValid && email.toLowerCase() !== email2.toLowerCase()) showErr('כתובות האימייל אינן תואמות');
     else showErr('יש למלא את כל השדות המסומנים באדום');
   }
