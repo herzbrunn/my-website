@@ -76,12 +76,46 @@
   <span class="copied-msg">הועתק!</span>
 </div>
 
+<hr style="margin: 40px 0; border: none; border-top: 2px solid #dde;">
+
+<h2 style="text-align:center; color:#333; margin-bottom:8px;">הסרה מרשימת ברכות יום הולדת</h2>
+<p style="text-align:center; color:#666; font-size:15px; margin-bottom:20px;">
+  אם אינך מעוניין לקבל ברכות יום הולדת, הזן את מספר הטלפון שלך ולחץ על "שלח בקשת הסרה".<br>
+  הבקשה תועבר אלינו ותטופל בהקדם.
+</p>
+
+<div class="card" style="flex-direction:column; align-items:stretch; gap:12px; max-width:480px; margin:0 auto 40px;">
+  <label style="font-size:15px; color:#444; font-weight:bold;">מספר טלפון:</label>
+  <input id="phoneInput" type="tel" placeholder="לדוגמה: 0541234567" dir="ltr"
+    style="padding:10px 14px; font-size:16px; border:1px solid #ccc; border-radius:8px; outline:none; text-align:left;">
+  <button class="btn" onclick="sendUnsubscribe()" style="align-self:flex-start; background:#e74c3c;">
+    שלח בקשת הסרה
+  </button>
+  <span id="unsubMsg" style="font-size:14px; color:#25d366; font-weight:bold; display:none;"></span>
+</div>
+
 <script>
   function copyWord(word, btn) {
     navigator.clipboard.writeText(word).then(function() {
       var msg = btn.parentElement.querySelector('.copied-msg');
       msg.style.opacity = '1';
       setTimeout(function() { msg.style.opacity = '0'; }, 1500);
+    });
+  }
+
+  function sendUnsubscribe() {
+    var phone = document.getElementById('phoneInput').value.trim();
+    if (!phone) {
+      alert('יש להזין מספר טלפון.');
+      return;
+    }
+    var text = 'הסר אותי מרשימת ברכות יום הולדת: ' + phone;
+    navigator.clipboard.writeText(text).then(function() {
+      var msg = document.getElementById('unsubMsg');
+      msg.textContent = 'הבקשה הועתקה! שלח אותה אלינו בוואטסאפ לאישור הסרה.';
+      msg.style.display = 'block';
+    }).catch(function() {
+      alert('הטקסט לשליחה:\n' + text);
     });
   }
 </script>
