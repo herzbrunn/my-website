@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>הסרה מרשימת ברכות יום הולדת</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 15px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px 28px;
+      max-width: 480px;
+      margin: 0 auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    label {
+      font-size: 15px;
+      color: #444;
+      font-weight: bold;
+    }
+    input[type="tel"] {
+      padding: 11px 14px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      text-align: left;
+      direction: ltr;
+      transition: border-color 0.2s;
+    }
+    input[type="tel"]:focus {
+      border-color: #e74c3c;
+    }
+    .btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      align-self: flex-start;
+    }
+    .btn:hover { background: #c0392b; }
+    .btn:active { background: #a93226; }
+    .success-msg {
+      font-size: 14px;
+      color: #27ae60;
+      font-weight: bold;
+      display: none;
+      line-height: 1.5;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 24px;
+      color: #888;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .back-link:hover { color: #555; }
+  </style>
+</head>
+<body>
+
+<h1>הסרה מרשימת ברכות יום הולדת</h1>
+<p class="subtitle">
+  אם אינך מעוניין לקבל ברכות יום הולדת,<br>
+  הזן את מספר הטלפון שלך ולחץ על "שלח בקשת הסרה".<br>
+  הבקשה תועבר אלינו ותטופל בהקדם.
+</p>
+
+<div class="card">
+  <label for="phoneInput">מספר טלפון:</label>
+  <input id="phoneInput" type="tel" placeholder="לדוגמה: 0541234567">
+  <button class="btn" onclick="sendUnsubscribe()">שלח בקשת הסרה</button>
+  <span id="successMsg" class="success-msg"></span>
+</div>
+
+<a class="back-link" href="milon.html">חזרה למילון</a>
+
+<script>
+  function sendUnsubscribe() {
+    var phone = document.getElementById('phoneInput').value.trim();
+    if (!phone) {
+      alert('יש להזין מספר טלפון.');
+      return;
+    }
+    var text = 'הסר אותי מרשימת ברכות יום הולדת: ' + phone;
+    navigator.clipboard.writeText(text).then(function() {
+      var msg = document.getElementById('successMsg');
+      msg.textContent = 'הבקשה הועתקה ללוח! שלח אותה אלינו בוואטסאפ ונסיר אותך מהרשימה.';
+      msg.style.display = 'block';
+    }).catch(function() {
+      alert('הטקסט לשליחה:\n' + text);
+    });
+  }
+</script>
+
+</body>
+</html>
