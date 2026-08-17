@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ביטול תזכורת</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 15px;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      text-align: center;
+      direction: ltr;
+      margin-bottom: 20px;
+    }
+    input[type="tel"]:focus {
+      outline: none;
+      border-color: #e53935;
+    }
+    .btn {
+      width: 100%;
+      background: #e53935;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #c62828;
+    }
+    #successMsg {
+      display: none;
+      margin-top: 20px;
+      background: #e8f5e9;
+      border-radius: 10px;
+      padding: 16px;
+      color: #2e7d32;
+      font-size: 15px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .back-link {
+      margin-top: 24px;
+      color: #888;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .back-link:hover { color: #333; }
+  </style>
+</head>
+<body>
+  <h1>ביטול תזכורת</h1>
+  <p class="subtitle">הזן את מספר הטלפון של הלקוח לביטול התזכורת</p>
+
+  <div class="card">
+    <label for="phoneInput">מספר טלפון</label>
+    <input type="tel" id="phoneInput" placeholder="050-0000000" />
+    <button class="btn" onclick="cancelReminder()">בטל תזכורת</button>
+    <div id="successMsg"></div>
+  </div>
+
+  <a class="back-link" href="milon.html">חזרה למילון</a>
+
+  <script>
+    function cancelReminder() {
+      var phone = document.getElementById('phoneInput').value.trim();
+      if (!phone) {
+        alert('יש להזין מספר טלפון');
+        return;
+      }
+      var msg = 'בטל תזכורת: ' + phone;
+      navigator.clipboard.writeText(msg).then(function() {
+        document.getElementById('successMsg').style.display = 'block';
+        document.getElementById('successMsg').innerHTML =
+          'ההודעה הועתקה ללוח!<br><strong>' + msg + '</strong><br><br>שלח אותה בקבוצת המפעיל.';
+      }).catch(function() {
+        alert('העתק ידנית: ' + msg);
+      });
+    }
+
+    // מילוי אוטומטי מה-URL אם יש ?phone=
+    window.onload = function() {
+      var params = new URLSearchParams(window.location.search);
+      var phone = params.get('phone');
+      if (phone) document.getElementById('phoneInput').value = phone;
+    };
+  </script>
+</body>
+</html>
