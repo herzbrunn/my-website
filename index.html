@@ -738,7 +738,7 @@ document.addEventListener('click', () => {
   const monthNames = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
   initCustomSelect('wrap_yetsia_chodesh', monthNames.map((m,i)=>({label:m,value:String(i+1)})));
   const years = [];
-  for(let y=2060;y>=2024;y--) years.push({label:String(y),value:String(y)});
+  for(let y=2060;y>=new Date().getFullYear();y--) years.push({label:String(y),value:String(y)});
   initCustomSelect('wrap_yetsia_shana', years);
 
   // תאריך לידה — לבן
