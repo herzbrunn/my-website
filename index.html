@@ -416,15 +416,21 @@
     <div class="field disabled" id="row_fu_time" style="flex-direction: column; align-items: flex-start; gap: 4px;">
       <label>שעת תזכורת</label>
       <div class="date-group" style="width: 100%;">
-        <div class="csel-wrapper csel-white" id="wrap_fu_shaa">
-          <input type="hidden" id="f_fu_shaa" value="">
-          <div class="csel-trigger" data-ph="שעה">שעה</div>
-          <div class="csel-options"></div>
+        <div style="display:flex;flex-direction:column;flex:1;gap:2px;">
+          <span style="font-size:11px;color:#888;">שעה</span>
+          <div class="csel-wrapper csel-white" id="wrap_fu_shaa">
+            <input type="hidden" id="f_fu_shaa" value="">
+            <div class="csel-trigger" data-ph="--">--</div>
+            <div class="csel-options"></div>
+          </div>
         </div>
-        <div class="csel-wrapper csel-white" id="wrap_fu_dakot">
-          <input type="hidden" id="f_fu_dakot" value="">
-          <div class="csel-trigger" data-ph="דקות">דקות</div>
-          <div class="csel-options"></div>
+        <div style="display:flex;flex-direction:column;flex:1;gap:2px;">
+          <span style="font-size:11px;color:#888;">דקות</span>
+          <div class="csel-wrapper csel-white" id="wrap_fu_dakot">
+            <input type="hidden" id="f_fu_dakot" value="">
+            <div class="csel-trigger" data-ph="--">--</div>
+            <div class="csel-options"></div>
+          </div>
         </div>
       </div>
     </div>
