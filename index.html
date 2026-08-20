@@ -780,7 +780,20 @@ document.addEventListener('click', () => {
     {label:'⚡ ממהר',     value:'ממהר'},
     {label:'😐 פסיבי',    value:'פסיבי'},
   ]);
+  setFuDefaults();
 })();
+
+function setFuDefaults() {
+  const now = new Date();
+  setCsel('wrap_fu_yom',    String(now.getDate()));
+  setCsel('wrap_fu_chodesh', String(now.getMonth() + 1));
+  setCsel('wrap_fu_shana',  String(now.getFullYear()));
+  let nextHour = now.getHours() + 1;
+  if (nextHour < 7)  nextHour = 7;
+  if (nextHour > 21) nextHour = 21;
+  setCsel('wrap_fu_shaa',  String(nextHour).padStart(2, '0'));
+  setCsel('wrap_fu_dakot', '00');
+}
 
 function clearForm() {
   clearErr();
@@ -795,6 +808,7 @@ function clearForm() {
   document.getElementById('f_tzkrt').checked = false;
   toggleContact(false);
   toggleFollowUp(false);
+  setFuDefaults();
   setCsel('wrap_tnucha','8');
   setCsel('wrap_dn_hafkada_mit','1.50%');
   setCsel('wrap_dn_tsevira_mit','0.15%');
