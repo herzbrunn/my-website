@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>רישום לקוח חדש</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f2f5;
+    padding: 20px;
+    direction: rtl;
+  }
+  .form-wrapper {
+    max-width: 520px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+  .form-header {
+    background: #1a7a4a;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+  .form-body { padding: 18px 20px; }
+  .field {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 8px 0;
+    gap: 10px;
+  }
+  .field:last-of-type { border-bottom: none; }
+  label {
+    min-width: 170px;
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  label .req { color: #c00; margin-left: 2px; }
+  input[type="text"], input[type="email"], input[type="number"], select {
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid #bbb;
+    padding: 4px 6px;
+    font-size: 13px;
+    font-family: inherit;
+    direction: rtl;
+    background: transparent;
+    outline: none;
+  }
+  input:focus, select:focus { border-bottom-color: #1a7a4a; }
+  .date-group { display: flex; gap: 6px; flex: 1; }
+  .date-group select { flex: 1; }
+  .section-label {
+    background: #1a7a4a;
+    color: white;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 8px -20px;
+    padding-right: 20px;
+  }
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; }
+  .checkbox-row label { min-width: auto; font-weight: normal; }
+  .field.disabled { opacity: 0.4; pointer-events: none; }
+  .bottom-bar {
+    background: #e8f5ee;
+    padding: 10px 20px;
+    font-size: 12px;
+    color: #555;
+    border-top: 1px solid #cde;
+  }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    padding: 14px 20px;
+    background: #f8f8f8;
+    border-top: 1px solid #ddd;
+    justify-content: flex-start;
+  }
+  .btn-save {
+    background: #1a7a4a;
+    color: white;
+    border: none;
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-save:hover { background: #155e3a; }
+  .btn-close {
+    background: #e0e0e0;
+    color: #333;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-close:hover { background: #c8c8c8; }
+  #copy-msg {
+    display: none;
+    color: #1a7a4a;
+    font-weight: bold;
+    font-size: 13px;
+    margin-right: 10px;
+    align-self: center;
+  }
+  .yetsia-row {
+    background: #ffd700;
+    margin: 0 -20px;
+    padding: 10px 20px;
+    border-right: 6px solid #e65c00;
+  }
+  .yetsia-row label {
+    font-size: 15px !important;
+    font-weight: bold !important;
+    color: #7a3300 !important;
+  }
+  .csel-wrapper { position: relative; flex: 1; }
+  .csel-trigger {
+    border-bottom: 2px solid #c8860a;
+    padding: 5px 8px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #ffd700;
+    color: #999;
+    user-select: none;
+    border-radius: 3px 3px 0 0;
+  }
+  .csel-trigger.selected { color: #3a1a00; }
+  .csel-trigger:hover { background: #ffcc00; }
+  .csel-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background: #fff9c4;
+    border: 2px solid #e65c00;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 9999;
+    box-shadow: 0 6px 16px rgba(230,92,0,0.3);
+  }
+  .csel-options.open { display: block; }
+  .csel-option {
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    direction: rtl;
+    color: #3a1a00;
+  }
+  .csel-option:hover { background: #ffd700; }
+  .csel-option.active { background: #e65c00; color: white; font-weight: bold; }
+  .csel-white .csel-trigger {
+    background: transparent;
+    color: #999;
+    border-bottom: 1px solid #bbb;
+    font-weight: normal;
+  }
+  .csel-white .csel-trigger.selected { color: #333; }
+  .csel-white .csel-trigger:hover { background: #f5f5f5; }
+  .csel-white .csel-options {
+    background: white;
+    border: 1px solid #bbb;
+    border-top: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .csel-white .csel-option { color: #333; }
+  .csel-white .csel-option:hover { background: #e8f5ee; }
+  .csel-white .csel-option.active { background: #1a7a4a; color: white; }
+  .field-err .csel-trigger { border-bottom-color: #c00 !important; background: #fff0f0 !important; }
+  .field-err input, .field-err select { border-bottom-color: #c00 !important; background: #fff0f0 !important; }
+  .checkbox-err { background: #fff0f0; border-radius: 4px; }
+  input[type="email"]:disabled { background: #f0f0f0 !important; color: #bbb !important; cursor: not-allowed; }
+  #email-warn {
+    display: none;
+    background: #fff8e1;
+    border-top: 2px solid #f0a500;
+    padding: 10px 20px;
+    gap: 12px;
+    align-items: center;
+    font-size: 13px;
+    color: #7a5000;
+    font-weight: bold;
+  }
+  #email-warn button { padding: 4px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; }
+  #email-warn .btn-continue { background: #e67e22; color: #fff; }
+  #email-warn .btn-back { background: #ddd; color: #333; }
+  #err-msg {
+    display: none;
+    background: #fff0f0;
+    color: #c00;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 8px 20px;
+    border-top: 1px solid #fcc;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="form-wrapper">
+  <div class="form-header">📋 רישום לקוח חדש</div>
+  <div class="form-body">
+
+    <div class="field">
+      <label><span class="req">*</span> שם פרטי</label>
+      <input type="text" id="f_shem_prati">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> שם משפחה</label>
+      <input type="text" id="f_shem_mishpacha">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> ניי"ד</label>
+      <input type="text" id="f_naid">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> אימות ניי"ד</label>
+      <input type="text" id="f_iymut_naid">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> צבירה בפנסיה</label>
+      <input type="text" id="f_tsevira" oninput="formatMoney(this)" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> הפקדה לפנסיה</label>
+      <input type="text" id="f_hafkada" oninput="formatMoney(this)" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> חברה מתחרה</label>
+      <div class="csel-wrapper csel-white" id="wrap_chevra">
+        <input type="hidden" id="f_chevra" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> מספר שנים בחברה</label>
+      <input type="number" id="f_shanim">
+    </div>
+    <div class="field" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <label><span class="req">*</span> תאריך לידה</label>
+      <div class="date-group" style="width: 100%;">
+        <div class="csel-wrapper csel-white" id="wrap_leda_yom">
+          <input type="hidden" id="f_leda_yom" value="">
+          <div class="csel-trigger" data-ph="יום">יום</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper csel-white" id="wrap_leda_chodesh">
+          <input type="hidden" id="f_leda_chodesh" value="">
+          <div class="csel-trigger" data-ph="חודש">חודש</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper csel-white" id="wrap_leda_shana">
+          <input type="hidden" id="f_leda_shana" value="">
+          <div class="csel-trigger" data-ph="שנה">שנה</div>
+          <div class="csel-options"></div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> מין</label>
+      <div class="csel-wrapper csel-white" id="wrap_min">
+        <input type="hidden" id="f_min" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> שפת לקוח</label>
+      <div class="csel-wrapper csel-white" id="wrap_safa">
+        <input type="hidden" id="f_safa" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> אימייל</label>
+      <input type="email" id="f_email">
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> אימות אימייל</label>
+      <input type="email" id="f_iymut_email">
+    </div>
+    <div style="display:flex; justify-content:flex-end; padding: 0 0 6px;">
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; color:#888; font-size:0.9em; font-weight:normal;">
+        <input type="checkbox" id="f_no_email" onchange="toggleNoEmail(this.checked)" style="width:auto; flex:none; accent-color:#e67e22;">
+        אין אימייל / לא ידוע
+      </label>
+    </div>
+    <div class="field">
+      <label><span class="req">*</span> מקום עבודה</label>
+      <input type="text" id="f_avoda">
+    </div>
+    <div class="field yetsia-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <label>⚡ תאריך יציאת כספים</label>
+      <div class="date-group" style="width: 100%;">
+        <div class="csel-wrapper" id="wrap_yetsia_yom">
+          <input type="hidden" id="f_yetsia_yom" value="">
+          <div class="csel-trigger" data-ph="יום">יום</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper" id="wrap_yetsia_chodesh">
+          <input type="hidden" id="f_yetsia_chodesh" value="">
+          <div class="csel-trigger" data-ph="חודש">חודש</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper" id="wrap_yetsia_shana">
+          <input type="hidden" id="f_yetsia_shana" value="">
+          <div class="csel-trigger" data-ph="שנה">שנה</div>
+          <div class="csel-options"></div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>הנחת תשואה</label>
+      <div class="csel-wrapper csel-white" id="wrap_tnucha">
+        <input type="hidden" id="f_tnucha" value="8">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>ד"נ מהפקדה (מתחרה)</label>
+      <div class="csel-wrapper csel-white" id="wrap_dn_hafkada_mit">
+        <input type="hidden" id="f_dn_hafkada_mit" value="1.50%">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>ד"נ צבירה (מתחרה)</label>
+      <div class="csel-wrapper csel-white" id="wrap_dn_tsevira_mit">
+        <input type="hidden" id="f_dn_tsevira_mit" value="0.15%">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>ד"נ מהפקדה (מנורה)</label>
+      <div class="csel-wrapper csel-white" id="wrap_dn_hafkada_men">
+        <input type="hidden" id="f_dn_hafkada_men" value="0.90%">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>ד"נ צבירה (מנורה)</label>
+      <div class="csel-wrapper csel-white" id="wrap_dn_tsevira_men">
+        <input type="hidden" id="f_dn_tsevira_men" value="0.09%">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>סוג לקוח</label>
+      <div class="csel-wrapper csel-white" id="wrap_mishpat">
+        <input type="hidden" id="f_mishpat" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+
+    <div class="section-label">👤 איש קשר נוסף</div>
+
+    <div class="checkbox-row">
+      <label for="f_yesh_ish_kesher">יש איש קשר נוסף</label>
+      <input type="checkbox" id="f_yesh_ish_kesher" onchange="toggleContact(this.checked)">
+    </div>
+    <div class="field disabled" id="row_karva">
+      <label>קרבה</label>
+      <div class="csel-wrapper csel-white" id="wrap_karva">
+        <input type="hidden" id="f_karva" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+    <div class="field disabled" id="row_contact_name">
+      <label>שם איש קשר</label>
+      <input type="text" id="f_contact_name">
+    </div>
+    <div class="field disabled" id="row_contact_phone">
+      <label>טלפון איש קשר</label>
+      <input type="text" id="f_contact_phone">
+    </div>
+
+    <div class="section-label">🔔 תזכורת</div>
+
+    <div class="checkbox-row">
+      <label for="f_tzkrt">קביעת תזכורת</label>
+      <input type="checkbox" id="f_tzkrt" onchange="toggleFollowUp(this.checked)">
+    </div>
+    <div class="field disabled" id="row_fu_date" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <label>תאריך תזכורת</label>
+      <div class="date-group" style="width: 100%;">
+        <div class="csel-wrapper csel-white" id="wrap_fu_yom">
+          <input type="hidden" id="f_fu_yom" value="">
+          <div class="csel-trigger" data-ph="יום">יום</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper csel-white" id="wrap_fu_chodesh">
+          <input type="hidden" id="f_fu_chodesh" value="">
+          <div class="csel-trigger" data-ph="חודש">חודש</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper csel-white" id="wrap_fu_shana">
+          <input type="hidden" id="f_fu_shana" value="">
+          <div class="csel-trigger" data-ph="שנה">שנה</div>
+          <div class="csel-options"></div>
+        </div>
+      </div>
+    </div>
+    <div class="field disabled" id="row_fu_time" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <label>שעת תזכורת</label>
+      <div class="date-group" style="width: 100%;">
+        <div class="csel-wrapper csel-white" id="wrap_fu_shaa">
+          <input type="hidden" id="f_fu_shaa" value="">
+          <div class="csel-trigger" data-ph="שעה">שעה</div>
+          <div class="csel-options"></div>
+        </div>
+        <div class="csel-wrapper csel-white" id="wrap_fu_dakot">
+          <input type="hidden" id="f_fu_dakot" value="">
+          <div class="csel-trigger" data-ph="דקות">דקות</div>
+          <div class="csel-options"></div>
+        </div>
+      </div>
+    </div>
+    <div class="field disabled" id="row_fu_reason">
+      <label>סיבת תזכורת</label>
+      <div class="csel-wrapper csel-white" id="wrap_fu_reason">
+        <input type="hidden" id="f_fu_reason" value="">
+        <div class="csel-trigger" data-ph="-- בחר --">-- בחר --</div>
+        <div class="csel-options"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>טופס</label>
+      <input type="text" id="f_tofes1">
+    </div>
+    <div class="field">
+      <label>טופס</label>
+      <input type="text" id="f_tofes2">
+    </div>
+    <div class="field">
+      <label>טופס</label>
+      <input type="text" id="f_tofes3">
+    </div>
+    <div class="field">
+      <label>טופס</label>
+      <input type="text" id="f_tofes4">
+    </div>
+
+  </div>
+
+  <div id="email-warn">
+    ⚠ לא הוזן אימייל — האם להמשיך בכל זאת?
+    <button class="btn-continue" onclick="doSaveAndCopy()">המשך</button>
+    <button class="btn-back" onclick="document.getElementById('email-warn').style.display='none'">חזור ומלא</button>
+  </div>
+  <div id="err-msg"></div>
+  <div class="bottom-bar">🔵 משפט פתיחה לשיחה הבאה</div>
+
+  <div class="btn-row">
+    <button class="btn-save" onclick="saveAndCopy()">💾 שמור</button>
+    <button class="btn-close" onclick="clearForm()">✖ נקה</button>
+    <span id="copy-msg">✅ הועתק ללוח!</span>
+  </div>
+</div>
+
+<script>
+function toggleContact(on) {
+  ['row_karva','row_contact_name','row_contact_phone'].forEach(id => {
+    document.getElementById(id).classList.toggle('disabled', !on);
+  });
+  if (!on) {
+    resetCsel('wrap_karva');
+    document.getElementById('f_contact_name').value = '';
+    document.getElementById('f_contact_phone').value = '';
+  }
+}
+
+function toggleFollowUp(on) {
+  ['row_fu_date','row_fu_time','row_fu_reason'].forEach(id => {
+    document.getElementById(id).classList.toggle('disabled', !on);
+  });
+  if (!on) {
+    ['wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot','wrap_fu_reason'].forEach(id => {
+      const w = document.getElementById(id);
+      const tr = w.querySelector('.csel-trigger');
+      tr.textContent = tr.dataset.ph;
+      tr.classList.remove('selected');
+      w.querySelector('input[type=hidden]').value = '';
+      w.querySelectorAll('.csel-option').forEach(o => o.classList.remove('active'));
+    });
+  }
+}
+
+function formatMoney(el) {
+  const raw = el.value.replace(/,/g, '');
+  if (!/^\d*$/.test(raw)) { el.value = el.value.slice(0, -1); return; }
+  if (!raw) return;
+  const sel = el.selectionStart;
+  const oldLen = el.value.length;
+  const formatted = Number(raw).toLocaleString('en-US');
+  el.value = formatted;
+  const diff = formatted.length - oldLen;
+  el.setSelectionRange(sel + diff, sel + diff);
+}
+
+function showErr(msg) {
+  const el = document.getElementById('err-msg');
+  el.textContent = '⚠ ' + msg;
+  el.style.display = 'block';
+}
+function clearErr() {
+  document.getElementById('err-msg').style.display = 'none';
+  document.querySelectorAll('.field-err').forEach(el => el.classList.remove('field-err'));
+  document.querySelectorAll('.checkbox-err').forEach(el => el.classList.remove('checkbox-err'));
+}
+function markErr(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const row = el.closest('.field') || el.closest('.checkbox-row');
+  if (row) row.classList.add('field-err');
+}
+
+function validate() {
+  clearErr();
+  let ok = true;
+
+  const name = document.getElementById('f_shem_prati').value.trim();
+  if (!name) { markErr('f_shem_prati'); ok = false; }
+
+  const last = document.getElementById('f_shem_mishpacha').value.trim();
+  if (!last) { markErr('f_shem_mishpacha'); ok = false; }
+
+  const phone  = document.getElementById('f_naid').value.replace(/-/g,'').replace(/ /g,'');
+  const phone2 = document.getElementById('f_iymut_naid').value.replace(/-/g,'').replace(/ /g,'');
+  const phoneValid = phone.length === 10 && phone.startsWith('05') && /^\d+$/.test(phone);
+  if (!phoneValid) { markErr('f_naid'); ok = false; }
+  if (!phone2 || phone !== phone2) { markErr('f_iymut_naid'); ok = false; }
+
+  if (!document.getElementById('f_tsevira').value.replace(/,/g,'').trim()) { markErr('f_tsevira'); ok = false; }
+  if (!document.getElementById('f_hafkada').value.replace(/,/g,'').trim()) { markErr('f_hafkada'); ok = false; }
+  if (!document.getElementById('f_chevra').value)         { markErr('f_chevra');  ok = false; }
+  if (!document.getElementById('f_shanim').value.trim())  { markErr('f_shanim');  ok = false; }
+  if (!document.getElementById('f_min').value)            { markErr('f_min');     ok = false; }
+  if (!document.getElementById('f_safa').value)           { markErr('f_safa');    ok = false; }
+  if (!document.getElementById('f_mishpat').value)        { markErr('f_mishpat'); ok = false; }
+
+  const noEmail = document.getElementById('f_no_email').checked;
+  const email  = document.getElementById('f_email').value.trim();
+  const email2 = document.getElementById('f_iymut_email').value.trim();
+  const emailValid = email.indexOf('@') > 0 && email.lastIndexOf('.') > email.indexOf('@') + 1;
+  if (!noEmail) {
+    if (!emailValid) { markErr('f_email'); ok = false; }
+    if (!email2 || email.toLowerCase() !== email2.toLowerCase()) { markErr('f_iymut_email'); ok = false; }
+  }
+
+  const dobD = document.getElementById('f_leda_yom').value;
+  const dobM = document.getElementById('f_leda_chodesh').value;
+  const dobY = document.getElementById('f_leda_shana').value;
+  if (!dobD) markErr('f_leda_yom');
+  if (!dobM) markErr('f_leda_chodesh');
+  if (!dobY) markErr('f_leda_shana');
+  if (!dobD || !dobM || !dobY) ok = false;
+
+  if (!document.getElementById('f_avoda').value.trim()) { markErr('f_avoda'); ok = false; }
+
+  if (!ok) {
+    if (phoneValid && phone !== phone2) showErr('מספרי הניי"ד אינם תואמים');
+    else if (emailValid && email.toLowerCase() !== email2.toLowerCase()) showErr('כתובות האימייל אינן תואמות');
+    else showErr('יש למלא את כל השדות המסומנים באדום');
+  }
+  return ok;
+}
+
+function saveAndCopy() {
+  if (!validate()) return;
+  if (document.getElementById('f_no_email').checked) {
+    document.getElementById('email-warn').style.display = 'flex';
+    return;
+  }
+  doSaveAndCopy();
+}
+function doSaveAndCopy() {
+  document.getElementById('email-warn').style.display = 'none';
+  const fields = [
+    { label: 'שם פרטי',            id: 'f_shem_prati' },
+    { label: 'שם משפחה',           id: 'f_shem_mishpacha' },
+    { label: 'ניי"ד',              id: 'f_naid' },
+    { label: 'אימות ניי"ד',        id: 'f_iymut_naid' },
+    { label: 'צבירה בפנסיה',       id: null, value: () => document.getElementById('f_tsevira').value.replace(/,/g,'') },
+    { label: 'הפקדה לפנסיה',       id: null, value: () => document.getElementById('f_hafkada').value.replace(/,/g,'') },
+    { label: 'חברה מתחרה',         id: 'f_chevra' },
+    { label: 'שנים בחברה',         id: 'f_shanim' },
+    { label: 'תאריך לידה',         id: null, value: () => {
+        const y = document.getElementById('f_leda_shana').value;
+        const m = document.getElementById('f_leda_chodesh').value;
+        const d = document.getElementById('f_leda_yom').value;
+        return [d,m,y].filter(Boolean).join('/');
+    }},
+    { label: 'מין',                id: 'f_min' },
+    { label: 'שפת לקוח',           id: 'f_safa' },
+    { label: 'אימייל',             id: 'f_email' },
+    { label: 'אימות אימייל',       id: 'f_iymut_email' },
+    { label: 'מקום עבודה',         id: 'f_avoda' },
+    { label: 'תאריך יציאת כספים',  id: null, value: () => {
+        const y = document.getElementById('f_yetsia_shana').value;
+        const m = document.getElementById('f_yetsia_chodesh').value;
+        const d = document.getElementById('f_yetsia_yom').value;
+        return [d,m,y].filter(Boolean).join('/');
+    }},
+    { label: 'הנחת תשואה',         id: 'f_tnucha' },
+    { label: 'ד"נ הפקדה מתחרה',   id: 'f_dn_hafkada_mit' },
+    { label: 'ד"נ צבירה מתחרה',   id: 'f_dn_tsevira_mit' },
+    { label: 'ד"נ הפקדה מנורה',   id: 'f_dn_hafkada_men' },
+    { label: 'ד"נ צבירה מנורה',   id: 'f_dn_tsevira_men' },
+    { label: 'סוג לקוח',           id: 'f_mishpat' },
+    { label: 'יש איש קשר נוסף',   id: null, value: () =>
+        document.getElementById('f_yesh_ish_kesher').checked ? 'כן' : ''
+    },
+    { label: 'קרבה',               id: 'f_karva' },
+    { label: 'שם איש קשר',        id: 'f_contact_name' },
+    { label: 'טלפון איש קשר',     id: 'f_contact_phone' },
+    { label: 'תאריך תזכורת',      id: null, value: () => {
+        const y = document.getElementById('f_fu_shana').value;
+        const m = document.getElementById('f_fu_chodesh').value;
+        const d = document.getElementById('f_fu_yom').value;
+        return [d,m,y].filter(Boolean).join('/');
+    }},
+    { label: 'שעת תזכורת',        id: null, value: () => {
+        const h = document.getElementById('f_fu_shaa').value;
+        const min = document.getElementById('f_fu_dakot').value;
+        return (h && min) ? h + ':' + min : '';
+    }},
+    { label: 'סיבת תזכורת',       id: 'f_fu_reason' },
+    { label: 'טופס', id: null, value: () => '1795432952טופס' + document.getElementById('f_tofes1').value.trim() },
+    { label: 'טופס', id: null, value: () => '1795432952טופס' + document.getElementById('f_tofes2').value.trim() },
+    { label: 'טופס', id: null, value: () => '1795432952טופס' + document.getElementById('f_tofes3').value.trim() },
+    { label: 'טופס', id: null, value: () => '1795432952טופס' + document.getElementById('f_tofes4').value.trim() },
+  ];
+
+  const values = fields.map(f => {
+    if (f.value) return f.value();
+    const el = document.getElementById(f.id);
+    return el ? el.value.trim() : '';
+  });
+
+  const regularValues = values.filter(v => !v.startsWith('1795432952טופס'));
+  const tofesValues   = values.filter(v => v.startsWith('1795432952טופס'));
+  const longLine = regularValues.filter(v => v && v.trim()).join(' ');
+  const result = regularValues.join('\n') + '\n\n\n\n' + longLine + '\n' + tofesValues.join('\n');
+
+  navigator.clipboard.writeText(result).then(() => {
+    const msg = document.getElementById('copy-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = result;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const msg = document.getElementById('copy-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  });
+}
+
+function toggleNoEmail(checked) {
+  const e1 = document.getElementById('f_email');
+  const e2 = document.getElementById('f_iymut_email');
+  e1.disabled = checked;
+  e2.disabled = checked;
+  if (checked) { e1.value = ''; e2.value = ''; }
+  document.getElementById('email-warn').style.display = 'none';
+}
+
+function setCsel(wrapperId, value) {
+  const w = document.getElementById(wrapperId);
+  if (!w) return;
+  const hidden  = w.querySelector('input[type=hidden]');
+  const trigger = w.querySelector('.csel-trigger');
+  w.querySelectorAll('.csel-option').forEach(o => {
+    o.classList.remove('active');
+    if (o.dataset.value === value) {
+      o.classList.add('active');
+      trigger.textContent = o.textContent;
+      trigger.classList.add('selected');
+      hidden.value = value;
+    }
+  });
+}
+
+function resetCsel(id) {
+  const w = document.getElementById(id);
+  if (!w) return;
+  const tr = w.querySelector('.csel-trigger');
+  tr.textContent = tr.dataset.ph;
+  tr.classList.remove('selected');
+  w.querySelector('input[type=hidden]').value = '';
+  w.querySelectorAll('.csel-option').forEach(o => o.classList.remove('active'));
+}
+
+// ── Custom select ──────────────────────────────────────────
+function initCustomSelect(wrapperId, items) {
+  const wrapper = document.getElementById(wrapperId);
+  const hidden  = wrapper.querySelector('input[type=hidden]');
+  const trigger = wrapper.querySelector('.csel-trigger');
+  const opts    = wrapper.querySelector('.csel-options');
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'csel-option';
+    div.textContent = item.label;
+    div.dataset.value = item.value;
+    div.addEventListener('click', () => {
+      hidden.value = item.value;
+      trigger.textContent = item.label;
+      trigger.classList.add('selected');
+      opts.classList.remove('open');
+      opts.querySelectorAll('.csel-option').forEach(o => o.classList.remove('active'));
+      div.classList.add('active');
+    });
+    opts.appendChild(div);
+  });
+  trigger.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelectorAll('.csel-options.open').forEach(o => { if(o!==opts) o.classList.remove('open'); });
+    opts.classList.toggle('open');
+  });
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.csel-options.open').forEach(o => o.classList.remove('open'));
+});
+(function(){
+  const days = Array.from({length:31},(_,i)=>({label:String(i+1),value:String(i+1)}));
+  initCustomSelect('wrap_yetsia_yom', days);
+  const monthNames = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  initCustomSelect('wrap_yetsia_chodesh', monthNames.map((m,i)=>({label:m,value:String(i+1)})));
+  const years = [];
+  for(let y=2060;y>=2024;y--) years.push({label:String(y),value:String(y)});
+  initCustomSelect('wrap_yetsia_shana', years);
+
+  // תאריך לידה — לבן
+  initCustomSelect('wrap_leda_yom', Array.from({length:31},(_,i)=>({label:String(i+1),value:String(i+1)})));
+  initCustomSelect('wrap_leda_chodesh', monthNames.map((m,i)=>({label:m,value:String(i+1)})));
+  const ledaYears = [];
+  for(let y=2010;y>=1930;y--) ledaYears.push({label:String(y),value:String(y)});
+  initCustomSelect('wrap_leda_shana', ledaYears);
+
+  // תזכורת — תאריך
+  initCustomSelect('wrap_fu_yom', Array.from({length:31},(_,i)=>({label:String(i+1),value:String(i+1)})));
+  initCustomSelect('wrap_fu_chodesh', monthNames.map((m,i)=>({label:m,value:String(i+1)})));
+  const fuYears = [];
+  for(let y=new Date().getFullYear();y<=new Date().getFullYear()+5;y++) fuYears.push({label:String(y),value:String(y)});
+  initCustomSelect('wrap_fu_shana', fuYears);
+  // תזכורת — שעה
+  const hours = Array.from({length:15},(_,i)=>{ const h=String(i+7).padStart(2,'0'); return {label:h,value:h}; });
+  initCustomSelect('wrap_fu_shaa', hours);
+  initCustomSelect('wrap_fu_dakot', [{label:'00',value:'00'},{label:'15',value:'15'},{label:'30',value:'30'},{label:'45',value:'45'}]);
+  initCustomSelect('wrap_chevra', ['הראל','כלל','מגדל','מור','הפניקס','מיטב'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_min',    ['זכר','נקבה'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_safa',   ['עברית','ערבית','רוסית','אנגלית','צרפתית','אמהרית','ספרדית','גרמנית','אוקראינית','רומנית','תיגרינית'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_karva',  ['בעל','אישה','אח','אחות','ילד/ה','הורה','אחר'].map(v=>({label:v,value:v})));
+  initCustomSelect('wrap_fu_reason', ['מעקב לאחר שיחה','חידוש עניין','הצעת מחיר','תזכורת סגירה','פגישה','אחר'].map(v=>({label:v,value:v})));
+  // הנחת תשואה
+  initCustomSelect('wrap_tnucha', [4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,11,12].map(v=>({label:String(v),value:String(v)})));
+  setCsel('wrap_tnucha','8');
+  // ד"נ מהפקדה מתחרה
+  initCustomSelect('wrap_dn_hafkada_mit', ['0.50%','0.75%','1.00%','1.10%','1.20%','1.25%','1.30%','1.40%','1.50%','1.75%','2.00%','2.50%','3.00%'].map(v=>({label:v,value:v})));
+  setCsel('wrap_dn_hafkada_mit','1.50%');
+  // ד"נ צבירה מתחרה
+  initCustomSelect('wrap_dn_tsevira_mit', ['0%','0.05%','0.09%','0.10%','0.12%','0.15%','0.18%','0.20%','0.22%','0.25%','0.30%'].map(v=>({label:v,value:v})));
+  setCsel('wrap_dn_tsevira_mit','0.15%');
+  // ד"נ מהפקדה מנורה
+  initCustomSelect('wrap_dn_hafkada_men', ['0.50%','0.60%','0.70%','0.80%','0.90%','1.00%','1.10%','1.20%'].map(v=>({label:v,value:v})));
+  setCsel('wrap_dn_hafkada_men','0.90%');
+  // ד"נ צבירה מנורה
+  initCustomSelect('wrap_dn_tsevira_men', ['0.05%','0.06%','0.07%','0.08%','0.09%','0.10%','0.12%','0.15%'].map(v=>({label:v,value:v})));
+  setCsel('wrap_dn_tsevira_men','0.09%');
+
+  initCustomSelect('wrap_mishpat',   [
+    {label:'🟢 זרם בשיחה',value:'זרם בשיחה'},
+    {label:'🟡 על הגדר',  value:'על הגדר'},
+    {label:'🔴 מתנגד',    value:'מתנגד'},
+    {label:'⚡ ממהר',     value:'ממהר'},
+    {label:'😐 פסיבי',    value:'פסיבי'},
+  ]);
+})();
+
+function clearForm() {
+  clearErr();
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]')
+    .forEach(el => el.value = '');
+  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  ['wrap_yetsia_yom','wrap_yetsia_chodesh','wrap_yetsia_shana',
+   'wrap_leda_yom','wrap_leda_chodesh','wrap_leda_shana',
+   'wrap_fu_yom','wrap_fu_chodesh','wrap_fu_shana','wrap_fu_shaa','wrap_fu_dakot','wrap_fu_reason',
+   'wrap_chevra','wrap_min','wrap_safa','wrap_karva','wrap_mishpat'].forEach(resetCsel);
+  document.getElementById('f_yesh_ish_kesher').checked = false;
+  document.getElementById('f_tzkrt').checked = false;
+  document.getElementById('f_no_email').checked = false;
+  toggleNoEmail(false);
+  toggleContact(false);
+  toggleFollowUp(false);
+  setCsel('wrap_tnucha','8');
+  setCsel('wrap_dn_hafkada_mit','1.50%');
+  setCsel('wrap_dn_tsevira_mit','0.15%');
+  setCsel('wrap_dn_hafkada_men','0.90%');
+  setCsel('wrap_dn_tsevira_men','0.09%');
+}
+</script>
+</body>
+</html>
