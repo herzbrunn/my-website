@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מילון מונחים</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .btn {
+      background: #25d366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { background: #1da851; }
+    .btn.red { background: #e53935; }
+    .btn.red:hover { background: #c62828; }
+    .btn.blue { background: #1565c0; }
+    .btn.blue:hover { background: #0d47a1; }
+    .btn.orange { background: #e65100; }
+    .btn.orange:hover { background: #bf360c; }
+    .desc {
+      color: #555;
+      font-size: 15px;
+      flex: 1;
+    }
+    .copied-msg {
+      opacity: 0;
+      color: #25d366;
+      font-size: 13px;
+      font-weight: bold;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>מילון מונחים</h1>
+
+  <!-- רישום -->
+  <div class="card">
+    <a class="btn red" href="https://herzbrunn.github.io/my-website/">רישום</a>
+    <span class="desc">מתאים כשהלקוח מתעניין בהצטרפות או פתיחת חשבון</span>
+  </div>
+
+  <!-- מילון -->
+  <div class="card">
+    <button class="btn" onclick="copyWord('מילון', this)">מילון</button>
+    <span class="desc">מתאים כשהמשתמש מבקש רשימת מונחים או הסברים</span>
+    <span class="copied-msg">הועתק!</span>
+  </div>
+
+  <!-- יום הולדת -->
+  <div class="card">
+    <a class="btn orange" href="birthday.html">יום הולדת</a>
+    <span class="desc">לחץ כשלקוח ביקש להפסיק לקבל ברכות יום הולדת — יפתח טופס הסרה</span>
+  </div>
+
+  <!-- ביטול תזכורת -->
+  <div class="card">
+    <a class="btn red" href="cancelreminder.html">ביטול תזכורת</a>
+    <span class="desc">לחץ כשצריך לבטל תזכורת קיימת — הזן טלפון ושלח בקבוצת המפעיל</span>
+  </div>
+
+  <!-- ביטול חזרה לטלפון -->
+  <div class="card">
+    <a class="btn blue" href="cancelcallback.html">ביטול חזרה לטלפון</a>
+    <span class="desc">לחץ כשלקוח ביטל בקשת חזרה לטלפון — הזן טלפון ושלח בקבוצת המפעיל</span>
+  </div>
+
+  <!-- משפט פתיחה -->
+  <div class="card">
+    <a class="btn blue" href="pitcha.html">משפט פתיחה</a>
+    <span class="desc">לחץ לעריכת משפט הפתיחה מול הלקוח</span>
+  </div>
+
+  <script>
+    function copyWord(word, btn) {
+      navigator.clipboard.writeText(word).then(function() {
+        var msg = btn.parentElement.querySelector('.copied-msg');
+        msg.style.opacity = '1';
+        setTimeout(function() { msg.style.opacity = '0'; }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
