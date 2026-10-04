@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>משפט פתיחה</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 12px;
+      resize: vertical;
+      direction: rtl;
+      box-sizing: border-box;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #1565c0;
+    }
+    .pitcha-fields {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .pitcha-fields input {
+      border: none;
+      border-bottom: 1px solid #bbb;
+      padding: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      direction: rtl;
+      outline: none;
+      width: 100%;
+    }
+    .pitcha-fields input:focus { border-bottom-color: #1565c0; }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+    .btn {
+      background: #1565c0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 32px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { background: #0d47a1; }
+    .btn.back { background: #757575; }
+    .btn.back:hover { background: #616161; }
+    #copy-msg {
+      display: none;
+      text-align: center;
+      color: #25d366;
+      font-weight: bold;
+      font-size: 15px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>משפט פתיחה</h1>
+  <div class="card">
+    <textarea id="pitcha-text" placeholder="הכנס כאן את משפט הפתיחה..."></textarea>
+
+    <div class="pitcha-fields">
+      <input type="text" id="f_p1" placeholder="פתיחה 1">
+      <input type="text" id="f_p2" placeholder="פתיחה 2">
+      <input type="text" id="f_p3" placeholder="פתיחה 3">
+      <input type="text" id="f_p4" placeholder="פתיחה 4">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="copyText()">✅ אישור — העתק</button>
+      <a class="btn back" href="milon.html">← חזור</a>
+    </div>
+    <div id="copy-msg">✅ הועתק ללוח!</div>
+  </div>
+
+  <script>
+    function copyText() {
+      const text = document.getElementById('pitcha-text').value.trim();
+      const p1 = document.getElementById('f_p1').value.trim();
+      const p2 = document.getElementById('f_p2').value.trim();
+      const p3 = document.getElementById('f_p3').value.trim();
+      const p4 = document.getElementById('f_p4').value.trim();
+
+      const pitchaLines = [p1, p2, p3, p4]
+        .map(v => '6240813957פתיחה' + v)
+        .join('\n');
+
+      const result = text + '\n' + pitchaLines;
+
+      navigator.clipboard.writeText(result).then(function() {
+        showMsg();
+      }).catch(function() {
+        const ta = document.createElement('textarea');
+        ta.value = result;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showMsg();
+      });
+    }
+
+    function showMsg() {
+      const msg = document.getElementById('copy-msg');
+      msg.style.display = 'block';
+      setTimeout(function() { msg.style.display = 'none'; }, 2000);
+    }
+  </script>
+</body>
+</html>
