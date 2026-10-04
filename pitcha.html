@@ -85,12 +85,18 @@
       <a class="btn back" href="milon.html">← חזור</a>
     </div>
     <div id="copy-msg">✅ הועתק ללוח!</div>
+    <div id="enter-warn" style="display:none; margin-top:10px; background:#c00; color:white; font-weight:bold; font-size:14px; padding:10px; border-radius:6px; text-align:center;">⛔ זוהתה ירידת שורה — יש למחוק אותה ולכתוב הכל בשורה אחת</div>
   </div>
 
   <script>
     function copyText() {
       const text = document.getElementById('pitcha-text').value.trim();
       if (!text) return;
+      if (text.includes('\n')) {
+        document.getElementById('enter-warn').style.display = 'block';
+        return;
+      }
+      document.getElementById('enter-warn').style.display = 'none';
 
       const longLine = text.split('\n').filter(v => v.trim()).join(' ');
       const pitchaLines = '6240813957פתיחה\n6240813957פתיחה\n6240813957פתיחה\n6240813957פתיחה';
