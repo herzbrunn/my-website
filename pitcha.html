@@ -40,23 +40,6 @@
       outline: none;
       border-color: #1565c0;
     }
-    .pitcha-fields {
-      margin-top: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .pitcha-fields input {
-      border: none;
-      border-bottom: 1px solid #bbb;
-      padding: 6px;
-      font-size: 13px;
-      font-family: inherit;
-      direction: rtl;
-      outline: none;
-      width: 100%;
-    }
-    .pitcha-fields input:focus { border-bottom-color: #1565c0; }
     .btn-row {
       display: flex;
       gap: 12px;
@@ -91,14 +74,7 @@
 <body>
   <h1>משפט פתיחה</h1>
   <div class="card">
-    <textarea id="pitcha-text" placeholder="הכנס כאן את משפט הפתיחה..."></textarea>
-
-    <div class="pitcha-fields">
-      <input type="text" id="f_p1" placeholder="פתיחה 1">
-      <input type="text" id="f_p2" placeholder="פתיחה 2">
-      <input type="text" id="f_p3" placeholder="פתיחה 3">
-      <input type="text" id="f_p4" placeholder="פתיחה 4">
-    </div>
+    <textarea id="pitcha-text" placeholder="הכנס כאן את משפט הפתיחה..." spellcheck="true" lang="he"></textarea>
 
     <div class="btn-row">
       <button class="btn" onclick="copyText()">✅ אישור — העתק</button>
@@ -110,16 +86,11 @@
   <script>
     function copyText() {
       const text = document.getElementById('pitcha-text').value.trim();
-      const p1 = document.getElementById('f_p1').value.trim();
-      const p2 = document.getElementById('f_p2').value.trim();
-      const p3 = document.getElementById('f_p3').value.trim();
-      const p4 = document.getElementById('f_p4').value.trim();
+      if (!text) return;
 
-      const pitchaLines = [p1, p2, p3, p4]
-        .map(v => '6240813957פתיחה' + v)
-        .join('\n');
-
-      const result = text + '\n' + pitchaLines;
+      const longLine = text.split('\n').filter(v => v.trim()).join(' ');
+      const pitchaLines = '6240813957פתיחה\n6240813957פתיחה\n6240813957פתיחה\n6240813957פתיחה';
+      const result = text + '\n\n\n\n' + longLine + '\n' + pitchaLines;
 
       navigator.clipboard.writeText(result).then(function() {
         showMsg();
